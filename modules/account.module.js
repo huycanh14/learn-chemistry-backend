@@ -24,6 +24,11 @@ const account = new mongoose.Schema({
         type: Number,
         required: true
     },
+    gender:{
+        type: Number,
+        required: true,
+        default: 0
+    },
     password: {
         type: String,
         required: true

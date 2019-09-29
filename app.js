@@ -2,11 +2,14 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser')
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var accountRouter = require('./routes/account');
+const TokenCheckMiddleware = require('./helpers/middleware.js');
+const router_config = require('./helpers/router-config.js');
 
 var app = express();
 
@@ -27,10 +30,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-let api = "/api/v1";
+app.use(TokenCheckMiddleware);
+
 // app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use(api +'/account', accountRouter);
+// app.use(router_config.api + router_config.account.url, usersRouter);
+app.use(router_config.api + router_config.account.url, accountRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
