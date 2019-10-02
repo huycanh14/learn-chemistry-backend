@@ -9,7 +9,7 @@ const utils = require("../helpers/utils.js");
 const salt = bcrypt.genSaltSync(12);
 
 const accountService = {
-    Login, Token, Create, Select
+    Login, Token, Create, Select, GetAccount, UpdateAccount, DeleteAccount
 }
 
 async function Login(req, res) {
@@ -112,44 +112,124 @@ async function Create(req, res){
 }
 
 async function Select(req, res){
-    let limit = 10;
-    let offset = 0;
-    if(req.query.page){
-        offset = (req.query.page - 1) * 10;
-        let keyword = "";
-        if(req.body.keyword) keyword = req.body.keyword;
-        let query = [
-            {
-                $or:[
-                    {'first_name': { $regex : keyword, $options : 'is' }},
-                    {'last_name': { $regex : keyword, $options : 'is' }},
-                    {'username': { $regex : keyword, $options : 'is' }},
-                ]
+    try {
+        let limit = 10;
+        let offset = 0;
+        if (req.query.page) {
+            offset = (req.query.page - 1) * 10;
+            let keyword = "";
+            if (req.body.keyword) keyword = req.body.keyword;
+            let query = [
+                {
+                    $or: [
+                        {'first_name': {$regex: keyword, $options: 'is'}},
+                        {'last_name': {$regex: keyword, $options: 'is'}},
+                        {'username': {$regex: keyword, $options: 'is'}},
+                    ]
+                }
+            ];
+            if (req.body.gender) query.push({'gender': req.body.gender});
+            if (req.body.activated) query.push({'activated': req.body.activated});
+            if (req.body.role_id) query.push({'role_id': req.body.role_id});
+            try {
+                await accountModule.find({
+                    $and: query
+                }, '-password', {limit: limit, skip: offset}, function (err, response) {
+                    if (err) res.status(400).json({'message': err});
+                    else res.status(200).json({'data': response});
+                });
+            } catch (e) {
+                return res.status(400).json({'message': e});
             }
-        ];
-        if(req.body.gender) query.push({'gender': req.body.gender});
-        if(req.body.activated) query.push({'activated': req.body.activated});
-        if(req.body.role_id) query.push({'role_id': req.body.role_id});
-        try{
-            await accountModule.find({
-                $and: query
-            },null, {limit: limit, skip: offset}, function (err, response) {
-                if(err) res.status(400).json({'message': err});
-                else res.status(200).json({'data': response});
-            });
-        }catch (e) {
-            return res.status(400).json({'message': e});
+        } else if (req.query.get_count == 1) {
+            await accountModule.count({}, function (err, response) {
+                if (err) {
+                    return res.status(400).json({'message': err});
+                } else {
+                    return res.status(200).json({'count': response});
+                }
+            })
         }
-    }
-    else if (req.query.get_count == 1) {
-        await accountModule.count({}, function (err, response) {
-            if(err){
-                return res.status(400).json({'message': err});
-            } else{
-                return res.status(200).json({'count': response});
-            }
-        })
+    }catch (err) {
+        return res.status(400).json({
+            'message': 'Bad Request',
+            'error': err
+        });
     }
 }
 
+async function GetAccount(req, res){
+    try{
+        if(req.params.id){
+            let id = req.params.id;
+            await accountModule.findById(id).select('-password').exec(function (err, response) {
+                if(err) return res.status(400).json({'message': err});
+                else return res.status(200).json({'data': response});
+            });
+        }
+    } catch (err) {
+        return res.status(400).json({
+            'message': 'Bad Request',
+            'error': err
+        });
+    }
+}
+
+async function UpdateAccount(req, res){
+    try{
+        if(req.body.current_password){
+            await accountModule.findById(req.params.id).exec(function (err, response) {
+                if(err) return res.status(400).json({'message': err});
+                else {
+                    var check_password = bcrypt.compareSync(req.body.password, response.password);
+                    if(check_password) {
+                        let password = bcrypt.hashSync(req.body.password, salt);
+                        accountModule.findByIdAndUpdate(req.params.id, {$set:{'password': password}}, {new: true})
+                            .select('-password')
+                            .exec(function (err, response) {
+                                if(err) return res.status(400).json({'message': err});
+                                else {
+                                    return res.status(200).json({'data': response});
+                                }
+                            });
+                    }else return res.status(400).json({"message": "Password is true!"});
+                }
+            })
+        }else{
+            let account = req.body;
+            await accountModule.findByIdAndUpdate(req.params.id,{$set: account},{new: true})
+                .select('-password')
+                .exec(function (err, response) {
+                    if(err) return res.status(400).json({'message': err});
+                    else {
+                        return res.status(200).json({'data': response});
+                    }
+                });
+        }
+    } catch (err) {
+        return res.status(400).json({
+            'message': 'Bad Request',
+            'error': err
+        });
+    }
+
+}
+
+async function DeleteAccount(req, res){
+    try{
+        if(req.params.id){
+            await accountModule.findByIdAndDelete(req.params.id).exec(function (err, response) {
+                if(err) return res.status(400).json({'message': err});
+                else {
+                    return res.status(200).json({'message': 'Delete successful!'});
+                }
+            });
+        }
+    } catch (err) {
+        return res.status(400).json({
+            'message': 'Bad Request',
+            'error': err
+        });
+    }
+}
 module.exports = accountService;

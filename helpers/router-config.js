@@ -8,7 +8,8 @@ const router_config = {
         token_endpoint: "/token",
         create_account: "/create",
         page: "/page",
-        select_account: "/get"
+        select_account: "/get",
+        change: "/profile"
     }
     // logopt_endpoint: "api/v1/account/logopt"
 }

@@ -16,7 +16,8 @@ var app = express();
 let uri = "mongodb://localhost/learn_chemistry"
 mongoose.connect(uri,{
   useUnifiedTopology: true,
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useFindAndModify: false
 });
 // mongoose.set('useUnifiedTopology', true);
 
