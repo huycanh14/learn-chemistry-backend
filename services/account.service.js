@@ -127,44 +127,19 @@ async function Select(req, res){
                 ]
             }
         ];
-        if(req)
+        if(req.body.gender) query.push({'gender': req.body.gender});
+        if(req.body.activated) query.push({'activated': req.body.activated});
+        if(req.body.role_id) query.push({'role_id': req.body.role_id});
         try{
-            if(req.body.gender){
-
-                await accountModule.find({
-                    $and:[
-                        {
-                            $or:[
-                                {'first_name': { $regex : keyword, $options : 'is' }},
-                                {'last_name': { $regex : keyword, $options : 'is' }},
-                                {'username': { $regex : keyword, $options : 'is' }},
-                            ]
-                        },
-                        {'gender': req.body.gender}
-                    ]
-                },null, {limit: limit, skip: offset}, function (err, response) {
-                    if(err) res.status(400).json({'message': err});
-                    else res.status(200).json({'data': response});
-                });
-            }else{
-                await accountModule.find({
-                    $or:[
-                        {'first_name': { $regex : keyword, $options : 'is' }},
-                        {'last_name': { $regex : keyword, $options : 'is' }},
-                        {'username': { $regex : keyword, $options: 'is' }},
-                    ]
-                }, null, {limit: limit, skip: offset}, function (err, response) {
-                    if(err){
-                        res.status(400).json({'message': err});
-                    }else{
-                        res.status(200).json({'data': response});
-                    }
-                });
-            }
+            await accountModule.find({
+                $and: query
+            },null, {limit: limit, skip: offset}, function (err, response) {
+                if(err) res.status(400).json({'message': err});
+                else res.status(200).json({'data': response});
+            });
         }catch (e) {
             return res.status(400).json({'message': e});
         }
-
     }
     else if (req.query.get_count == 1) {
         await accountModule.count({}, function (err, response) {
