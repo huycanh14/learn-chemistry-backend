@@ -9,7 +9,7 @@ const utils = require("../helpers/utils.js");
 const salt = bcrypt.genSaltSync(12);
 
 const accountService = {
-    Login, Token, Create
+    Login, Token, Create, Select
 }
 
 async function Login(req, res) {
@@ -26,13 +26,11 @@ async function Login(req, res) {
         const refresh_token = jwt.sign({data: data}, config.refreshTokenSecret, {
             expiresIn: config.tokenLife
         });
-
         // var test = bcrypt.compareSync(hash, data.password);
         var check_password = bcrypt.compareSync(account.password, data.password);
         if(check_password){
             tokenList[refresh_token] = data;
             var response = data;
-
             response.password = undefined;
             response = JSON.parse(JSON.stringify(response));
             response.refresh_token = refresh_token;
@@ -42,19 +40,15 @@ async function Login(req, res) {
                 message: "Wrong login credential"
             });
         }
-
     } else{
         res.status(401).json({
             message: "Wrong login credential"
         });
     }
-
 }
 
 async function Token(req, res){
     const { refresh_token } = req.headers;
-    console.log(refresh_token);
-    // con
     if((refresh_token) && (refresh_token in tokenList)){
         try {
             // Kiểm tra mã refresh_token
@@ -65,7 +59,6 @@ async function Token(req, res){
             const access_token = jwt.sign({data: user}, config.secret, {
                 expiresIn: config.tokenLife,
             });
-
             var response = user;
             response.password = undefined;
             response = JSON.parse(JSON.stringify(response));
@@ -85,7 +78,103 @@ async function Token(req, res){
 }
 
 async function Create(req, res){
-    res.json(req.body);
+    try{
+        let password = bcrypt.hashSync(req.body.password, salt);
+        let account = new accountModule({
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            username: req.body.username,
+            email: req.body.email,
+            date_of_birth: req.body.date_of_birth,
+            gender: req.body.gender,
+            password: password,
+            role_id: req.body.role_id,
+            created_at: req.body.created_at,
+            updated_at: req.body.updated_at,
+            activated: req.body.activated
+        });
+        account.save(function (err, response) {
+            if(err){
+                return res.status(400).json({'message': err});
+            } else {
+                response.password = undefined;
+                response = JSON.parse(JSON.stringify(response));
+                return res.status(200).json({'data': response});
+            }
+        })
+    } catch (err) {
+        return res.status(400).json({
+            'message': 'Bad Request',
+            'error': err
+        });
+    }
+
+}
+
+async function Select(req, res){
+    let limit = 10;
+    let offset = 0;
+    if(req.query.page){
+        offset = (req.query.page - 1) * 10;
+        let keyword = "";
+        if(req.body.keyword) keyword = req.body.keyword;
+        let query = [
+            {
+                $or:[
+                    {'first_name': { $regex : keyword, $options : 'is' }},
+                    {'last_name': { $regex : keyword, $options : 'is' }},
+                    {'username': { $regex : keyword, $options : 'is' }},
+                ]
+            }
+        ];
+        if(req)
+        try{
+            if(req.body.gender){
+
+                await accountModule.find({
+                    $and:[
+                        {
+                            $or:[
+                                {'first_name': { $regex : keyword, $options : 'is' }},
+                                {'last_name': { $regex : keyword, $options : 'is' }},
+                                {'username': { $regex : keyword, $options : 'is' }},
+                            ]
+                        },
+                        {'gender': req.body.gender}
+                    ]
+                },null, {limit: limit, skip: offset}, function (err, response) {
+                    if(err) res.status(400).json({'message': err});
+                    else res.status(200).json({'data': response});
+                });
+            }else{
+                await accountModule.find({
+                    $or:[
+                        {'first_name': { $regex : keyword, $options : 'is' }},
+                        {'last_name': { $regex : keyword, $options : 'is' }},
+                        {'username': { $regex : keyword, $options: 'is' }},
+                    ]
+                }, null, {limit: limit, skip: offset}, function (err, response) {
+                    if(err){
+                        res.status(400).json({'message': err});
+                    }else{
+                        res.status(200).json({'data': response});
+                    }
+                });
+            }
+        }catch (e) {
+            return res.status(400).json({'message': e});
+        }
+
+    }
+    else if (req.query.get_count == 1) {
+        await accountModule.count({}, function (err, response) {
+            if(err){
+                return res.status(400).json({'message': err});
+            } else{
+                return res.status(200).json({'count': response});
+            }
+        })
+    }
 }
 
 module.exports = accountService;
