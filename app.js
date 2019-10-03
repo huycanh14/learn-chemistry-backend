@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var accountRouter = require('./routes/account');
+var gradeLevelRouter = require('./routes/grade_level');
 const TokenCheckMiddleware = require('./helpers/middleware.js');
 const router_config = require('./helpers/router-config.js');
 
@@ -36,6 +37,7 @@ app.use(TokenCheckMiddleware);
 // app.use('/', indexRouter);
 // app.use(router_config.api + router_config.account.url, usersRouter);
 app.use(router_config.api + router_config.account.url, accountRouter);
+app.use(router_config.api + router_config.grade_level.url, gradeLevelRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

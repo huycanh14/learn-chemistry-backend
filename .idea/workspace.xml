@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpers/router-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/router-config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/account.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/account.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/account.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/account.service.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -13,6 +12,13 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -59,7 +65,9 @@
       <workItem from="1569888269026" duration="4340000" />
       <workItem from="1569902207615" duration="2399000" />
       <workItem from="1569927857143" duration="1217000" />
-      <workItem from="1570000552494" duration="9178000" />
+      <workItem from="1570000552494" duration="9251000" />
+      <workItem from="1570060987373" duration="6557000" />
+      <workItem from="1570100399174" duration="1189000" />
     </task>
     <servers />
   </component>

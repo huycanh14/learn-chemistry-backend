@@ -10,6 +10,9 @@ const router_config = {
         page: "/page",
         select_account: "/get",
         change: "/profile"
+    },
+    grade_level: {
+        url: "/grade_level",
     }
     // logopt_endpoint: "api/v1/account/logopt"
 }

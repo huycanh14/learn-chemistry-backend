@@ -149,7 +149,7 @@ async function Select(req, res){
                     return res.status(200).json({'count': response});
                 }
             })
-        }
+        } else return req.status(400).json({'message': 'Not query!'});
     }catch (err) {
         return res.status(400).json({
             'message': 'Bad Request',
