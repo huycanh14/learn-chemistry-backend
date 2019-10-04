@@ -224,7 +224,7 @@ async function DeleteAccount(req, res){
                     return res.status(200).json({'message': 'Delete successful!'});
                 }
             });
-        }
+        }else return res.status(400).json({'message': 'Not query!'});
     } catch (err) {
         return res.status(400).json({
             'message': 'Bad Request',

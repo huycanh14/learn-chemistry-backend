@@ -13,6 +13,9 @@ const router_config = {
     },
     grade_level: {
         url: "/grade_level",
+    },
+    chapter:{
+        url: "/chapter",
     }
     // logopt_endpoint: "api/v1/account/logopt"
 }

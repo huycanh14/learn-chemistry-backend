@@ -10,6 +10,9 @@ const chapter = mongoose.Schema({
         type: String,
         required: true
     },
+    description:{
+        type: String
+    },
     grade_level_id:{
         type: String,
         required: true
@@ -29,4 +32,4 @@ const chapter = mongoose.Schema({
     }
 })
 
-modul.exports = mongoose.model("chapters", chapter, "chapters")
+module.exports = mongoose.model("chapters", chapter, "chapters")

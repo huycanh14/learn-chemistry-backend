@@ -52,7 +52,7 @@ async function GetGradeLevel(req, res){
                 if(err) return res.status(400).json({'message': err});
                 else return res.status(200).json({'data': response});
             })
-        }
+        } else return res.status(400).json({'message': 'Not query!'});
     } catch(err) {
         return res.status(400).json({
             'message': "Bad request!",
@@ -84,13 +84,12 @@ async function CreateGradeLevel(req, res){
 async function UpdateGradeLevel(req, res){
     try{
         if(req.params.id) {
-            console.log(req.body);
             await gradeLevelModule.findByIdAndUpdate(req.params.id, {$set: req.body},{new: true})
                 .exec(function (err, response) {
                     if(err) return res.status(400).json({'messgae': err});
                     else return res.status(200).json({'data': response});
                 })
-        }
+        } else return res.status(400).json({'message': 'Not query!'});
     } catch (err) {
         return res.status(400).json({
             'message': 'Bad request!',
@@ -106,7 +105,7 @@ async function DeleteGradeLevel(req, res){
                 if(err) return res.status(400).json({'message': err});
                 return res.status(200).json({'message': 'Delete successful!'});
             })
-        }
+        }else return res.status(400).json({'message': 'Not query!'});
     } catch (err) {
         return res.status(400).json({
             'message': "Bad request!",
