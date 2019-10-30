@@ -4,9 +4,19 @@
     <list default="true" id="d9c9a1ed-cd31-44d9-95a3-ef8df47a27a5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/middleware.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/middleware.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpers/router-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/router-config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/account.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/modules/account.module.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/chapter.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/modules/chapter.module.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/grade_level.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/modules/grade_level.module.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/lesson.module.js" beforeDir="false" afterPath="$PROJECT_DIR$/modules/lesson.module.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/grade_level.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/grade_level.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/services/account.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/account.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/chapter.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/chapter.service.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/grade_level.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/grade_level.service.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,12 +39,14 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -72,7 +84,18 @@
       <workItem from="1570100399174" duration="3019000" />
       <workItem from="1570158467516" duration="13000" />
       <workItem from="1570159181038" duration="5734000" />
-      <workItem from="1570169510268" duration="700000" />
+      <workItem from="1570169510268" duration="772000" />
+      <workItem from="1570419886126" duration="4390000" />
+      <workItem from="1572350963811" duration="1302000" />
+      <workItem from="1572356813003" duration="77000" />
+      <workItem from="1572358374781" duration="61000" />
+      <workItem from="1572358448821" duration="98000" />
+      <workItem from="1572360564074" duration="63000" />
+      <workItem from="1572360650982" duration="24000" />
+      <workItem from="1572360694471" duration="82000" />
+      <workItem from="1572360812405" duration="159000" />
+      <workItem from="1572361817693" duration="896000" />
+      <workItem from="1572401831383" duration="1797000" />
     </task>
     <servers />
   </component>

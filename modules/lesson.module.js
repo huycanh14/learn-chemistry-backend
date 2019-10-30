@@ -1,4 +1,4 @@
-let mongoose = require("mongoose");
+var mongoose = require("mongoose");
 mongoose.set('useCreateIndex', true);
 
 const lesson = new mongoose.Schema({
@@ -33,4 +33,4 @@ const lesson = new mongoose.Schema({
     }
 })
 
-modul.exports = mongoose.model("lessons", lesson, "lessons");
+module.exports = mongoose.model("lessons", lesson, "lessons");

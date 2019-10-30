@@ -13,8 +13,8 @@ const accountService = {
 }
 
 async function Login(req, res) {
-    var account = req.body;
-    var data = await accountModule.findOne({
+    let account = req.body;
+    let data = await accountModule.findOne({
         $or:[
             {'email': account.user_name},
             {'username': account.user_name,}
@@ -27,10 +27,10 @@ async function Login(req, res) {
             expiresIn: config.tokenLife
         });
         // var test = bcrypt.compareSync(hash, data.password);
-        var check_password = bcrypt.compareSync(account.password, data.password);
+        let check_password = bcrypt.compareSync(account.password, data.password);
         if(check_password){
             tokenList[refresh_token] = data;
-            var response = data;
+            let response = data;
             response.password = undefined;
             response = JSON.parse(JSON.stringify(response));
             response.refresh_token = refresh_token;
@@ -59,7 +59,7 @@ async function Token(req, res){
             const access_token = jwt.sign({data: user}, config.secret, {
                 expiresIn: config.tokenLife,
             });
-            var response = user;
+            let response = user;
             response.password = undefined;
             response = JSON.parse(JSON.stringify(response));
             response.access_token = access_token;

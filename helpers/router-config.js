@@ -16,6 +16,9 @@ const router_config = {
     },
     chapter:{
         url: "/chapter",
+    },
+    lesson:{
+        url: "/lesson"
     }
     // logopt_endpoint: "api/v1/account/logopt"
 }

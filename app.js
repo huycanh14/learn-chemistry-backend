@@ -5,11 +5,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser')
 var logger = require('morgan');
 var mongoose = require('mongoose');
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var accountRouter = require('./routes/account');
 var gradeLevelRouter = require('./routes/grade_level');
 var chapterRouter = require('./routes/chapter');
+var lessonRouter = require('./routes/lesson');
 const TokenCheckMiddleware = require('./helpers/middleware.js');
 const router_config = require('./helpers/router-config.js');
 
@@ -40,6 +39,7 @@ app.use(TokenCheckMiddleware);
 app.use(router_config.api + router_config.account.url, accountRouter);
 app.use(router_config.api + router_config.grade_level.url, gradeLevelRouter);
 app.use(router_config.api + router_config.chapter.url, chapterRouter);
+app.use(router_config.api + router_config.lesson.url, lessonRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

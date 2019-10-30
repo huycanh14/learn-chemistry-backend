@@ -1,4 +1,4 @@
-let express = require("express");
+var express = require("express");
 const jwt = require("jsonwebtoken");
 module.exports = {
     verifyJwtToken: (token, secretKey) => {

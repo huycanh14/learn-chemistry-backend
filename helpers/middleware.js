@@ -1,4 +1,4 @@
-let express = require("express");
+var express = require("express");
 const jwt = require("jsonwebtoken");
 let config = require("./config.js");
 const utils = require("./utils.js");

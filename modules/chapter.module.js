@@ -1,4 +1,4 @@
-let mongoose = require("mongoose");
+var mongoose = require("mongoose");
 mongoose.set('useCreateIndex', true);
 
 const chapter = mongoose.Schema({

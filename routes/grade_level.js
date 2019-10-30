@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-let gradeLevelService = require('../services/grade_level.service');
+var gradeLevelService = require('../services/grade_level.service');
 const router_config = require('../helpers/router-config.js');
 
 router.get("", gradeLevelService.GetList);

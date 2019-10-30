@@ -1,5 +1,5 @@
 // let express = require('express');
-let config = {
+var config = {
     secret: "s0me-secr3t-goes-here",
     refreshTokenSecret: "some-s3cret-refre2h-token",
     port: 3000,

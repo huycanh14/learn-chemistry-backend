@@ -1,5 +1,5 @@
-let express = require('express');
-let gradeLevelModule = require('../modules/grade_level.module');
+var express = require('express');
+var gradeLevelModule = require('../modules/grade_level.module');
 const router_config = require('../helpers/router-config.js');
 const gradeLevelService = {
     GetList, GetGradeLevel, CreateGradeLevel, UpdateGradeLevel, DeleteGradeLevel

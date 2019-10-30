@@ -1,6 +1,6 @@
-let express = require('express');
-let router_config = require('../helpers/router-config');
-let chapterModule = require('../modules/chapter.module');
+var express = require('express');
+var router_config = require('../helpers/router-config');
+var chapterModule = require('../modules/chapter.module');
 
 const chapterService = {
     GetListChapter, GetChapter, CreateChapter, UpdateChapter, DeleteChapter
