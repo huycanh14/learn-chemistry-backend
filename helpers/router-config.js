@@ -19,6 +19,9 @@ const router_config = {
     },
     lesson:{
         url: "/lesson"
+    },
+    theory: {
+        url: "/theory"
     }
     // logopt_endpoint: "api/v1/account/logopt"
 }
