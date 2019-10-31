@@ -40,7 +40,7 @@ async function CreateTheory(req, res) {
             updated_at: req.body.updated_at,
             activated: req.body.activated,
         });
-        theory.save(function (err, response) {
+        await theory.save(function (err, response) {
             if(err) return res.status(400).json({"message": err});
             else return res.status(200).json({"data": response});
         })
@@ -58,7 +58,7 @@ async function UpdateTheory(req, res) {
      */
     try{
         if(req.params.id){
-            theoryModule.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true}).exec(function (err, response) {
+            await theoryModule.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true}).exec(function (err, response) {
                 if(err) return res.status(400).json({"message": err});
                 else return res.status(200).json({"data": response});
             })
@@ -77,7 +77,7 @@ async function DeleteTheory(req, res) {
      */
     try{
         if(req.params.id){
-            theoryModule.findByIdAndDelete(req.params.id).exec(function (err, response) {
+            await theoryModule.findByIdAndDelete(req.params.id).exec(function (err, response) {
                 if(err) return res.status(400).json({"message": err});
                 else return res.status(200).json({"message": "Delete successful!"})
             })

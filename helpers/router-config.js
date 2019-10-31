@@ -22,6 +22,9 @@ const router_config = {
     },
     theory: {
         url: "/theory"
+    },
+    type_of_lesson: {
+        url: "/type_of_lesson"
     }
     // logopt_endpoint: "api/v1/account/logopt"
 }

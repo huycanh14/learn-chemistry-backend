@@ -26,9 +26,9 @@ const chapter = mongoose.Schema({
         required: true
     },
     activated:{
-        type: Number,
+        type: Boolean,
         required: true,
-        default: 1
+        default: true
     }
 })
 

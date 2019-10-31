@@ -19,7 +19,7 @@ const theory = new mongoose.Schema({
         required: true
     },
     activated: {
-        type: Number,
+        type: Boolean,
         required: true,
         default: true
     }

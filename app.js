@@ -10,6 +10,7 @@ var gradeLevelRouter = require('./routes/grade_level');
 var chapterRouter = require('./routes/chapter');
 var lessonRouter = require('./routes/lesson');
 var theoryRouter = require('./routes/theory');
+var typeOfLessonRouter = require('./routes/type_of_lesson');
 const TokenCheckMiddleware = require('./helpers/middleware.js');
 const router_config = require('./helpers/router-config.js');
 
@@ -42,6 +43,7 @@ app.use(router_config.api + router_config.grade_level.url, gradeLevelRouter);
 app.use(router_config.api + router_config.chapter.url, chapterRouter);
 app.use(router_config.api + router_config.lesson.url, lessonRouter);
 app.use(router_config.api + router_config.theory.url, theoryRouter);
+app.use(router_config.api + router_config.type_of_lesson.url, typeOfLessonRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
