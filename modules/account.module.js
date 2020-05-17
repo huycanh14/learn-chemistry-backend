@@ -52,4 +52,4 @@ const account = new mongoose.Schema({
 // }, { collection: "accounts"});
 });
 
-module.exports = mongoose.model('accounts', account, 'accounts');
+module.exports = mongoose.model('account', account, 'account');

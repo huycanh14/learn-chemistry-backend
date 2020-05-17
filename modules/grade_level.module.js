@@ -21,4 +21,4 @@ const grade_level =  new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model("grade_levels", grade_level, "grade_levels");
+module.exports = mongoose.model("grade_level", grade_level, "grade_level");

@@ -22,7 +22,7 @@ async function GetListTypeOfLesson(req, res){
                     else return req.status(200).json({"count": response});
                 })
             } else{
-                await  typeOfLessonMoudle.find(query).exec(function (err, response) {
+                await  typeOfLessonMoudle.find(query, null, function (err, response) {
                     if(err) return req.status(400).json({"message": err});
                     else return req.status(200).json({"data": response});
                 })

@@ -2,7 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var accountRouter = require('./routes/account');
@@ -11,6 +11,7 @@ var chapterRouter = require('./routes/chapter');
 var lessonRouter = require('./routes/lesson');
 var theoryRouter = require('./routes/theory');
 var typeOfLessonRouter = require('./routes/type_of_lesson');
+var exampleExerciseRouter = require('./routes/example_exercise');
 const TokenCheckMiddleware = require('./helpers/middleware.js');
 const router_config = require('./helpers/router-config.js');
 
@@ -44,6 +45,7 @@ app.use(router_config.api + router_config.chapter.url, chapterRouter);
 app.use(router_config.api + router_config.lesson.url, lessonRouter);
 app.use(router_config.api + router_config.theory.url, theoryRouter);
 app.use(router_config.api + router_config.type_of_lesson.url, typeOfLessonRouter);
+app.use(router_config.api + router_config.example_exercise.url, exampleExerciseRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

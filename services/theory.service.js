@@ -89,3 +89,5 @@ async function DeleteTheory(req, res) {
         })
     }
 }
+
+module.exports = theoryService;

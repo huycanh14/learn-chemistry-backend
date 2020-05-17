@@ -16,8 +16,8 @@ async function Login(req, res) {
     let account = req.body;
     let data = await accountModule.findOne({
         $or:[
-            {'email': account.user_name},
-            {'username': account.user_name,}
+            {'email': account.email},
+            {'username': account.user_name}
         ]
     }, function (err, request) {
         return request;

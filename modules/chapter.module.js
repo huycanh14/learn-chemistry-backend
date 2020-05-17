@@ -32,4 +32,4 @@ const chapter = mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model("chapters", chapter, "chapters")
+module.exports = mongoose.model("chapter", chapter, "chapter")

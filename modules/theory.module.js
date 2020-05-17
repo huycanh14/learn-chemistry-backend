@@ -25,4 +25,4 @@ const theory = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model("theories", theory, "theories");
+module.exports = mongoose.model("theory", theory, "theory");

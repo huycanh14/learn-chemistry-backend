@@ -25,6 +25,9 @@ const router_config = {
     },
     type_of_lesson: {
         url: "/type_of_lesson"
+    },
+    example_exercise: {
+        url: "/example_exercise"
     }
     // logopt_endpoint: "api/v1/account/logopt"
 }

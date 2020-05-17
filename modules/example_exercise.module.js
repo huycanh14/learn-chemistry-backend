@@ -1,26 +1,22 @@
 var mongoose = require("mongoose");
 mongoose.set("useCreateIndex", true);
 
-const type_of_lesson = new mongoose.Schema({
-    title: {
-        type: String,
+const example_exercise = new mongoose.Schema({
+    ex_exercise_number: {
+        type: Number,
         required: true
     },
-    theorie_number: {
-        type: Number,
+    type_of_lesson_id: {
+        type: String,
         required: true
     },
     content: {
         type: String,
         required: true
     },
-    lesson_id: {
-        type: String,
-        required: true
-    },
     created_at: {
         type: String,
-        required: true,
+        required: true
     },
     updated_at: {
         type: String,
@@ -33,4 +29,4 @@ const type_of_lesson = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("type_of_lesson", type_of_lesson, "type_of_lesson");
+module.exports = mongoose.model("example_exercise", example_exercise, "example_exercise");
