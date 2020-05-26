@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 mongoose.set('useCreateIndex', true);
 
-const account = new mongoose.Schema({
+const Accounts = new mongoose.Schema({
     first_name: {
         type: String,
         required: true
@@ -25,31 +25,36 @@ const account = new mongoose.Schema({
         required: true
     },
     gender:{
-        type: Number,
+        type: Boolean,
         required: true,
-        default: 0
+        default: true
+        // true => male, false => female
     },
     password: {
         type: String,
         required: true
     },
     role_id: {
-        type: Number,
-        required: true
+        type: Boolean,
+        required: true,
+        default: false,
+        // true => admin, false => user
     },
     created_at: {
         type: Number,
-        required: true
+        required: true,
+        default: Date.now()
     },
     updated_at: {
         type: Number,
-        required: true
+        required: true,
+        default: Date.now()
     },
     activated: {
         type: Boolean,
         default: true
+        // true => active, false => nonactive
     }
-// }, { collection: "accounts"});
 });
 
-module.exports = mongoose.model('account', account, 'account');
+module.exports = mongoose.model('accounts', Accounts, 'accounts');

@@ -1,5 +1,7 @@
-var express = require("express");
-const jwt = require("jsonwebtoken");
+// cung cấp một hàm để xác thực các mã token.
+
+const jwt = require('jsonwebtoken');
+
 module.exports = {
     verifyJwtToken: (token, secretKey) => {
         return new Promise((resolve, reject) => {

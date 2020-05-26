@@ -2,50 +2,46 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
 var logger = require('morgan');
+// declare mongoose
 var mongoose = require('mongoose');
+
+// require dotenv => process.env.MONGODB_URI
+require('dotenv').config();
+
+
+// declare routers
 var accountRouter = require('./routes/account');
-var gradeLevelRouter = require('./routes/grade_level');
-var chapterRouter = require('./routes/chapter');
-var lessonRouter = require('./routes/lesson');
-var theoryRouter = require('./routes/theory');
-var typeOfLessonRouter = require('./routes/type_of_lesson');
-var exampleExerciseRouter = require('./routes/example_exercise');
+
+// declare TokenCheckMiddleware
 const TokenCheckMiddleware = require('./helpers/middleware.js');
-const router_config = require('./helpers/router-config.js');
 
 var app = express();
 
-let uri = "mongodb://localhost/learn_chemistry"
+// connect to mongodb
+const uri = `mongodb://${process.env.MONGODB_URI}/${process.env.DATA_BASE_URI}`
 mongoose.connect(uri,{
   useUnifiedTopology: true,
   useNewUrlParser: true,
   useFindAndModify: false
 });
-// mongoose.set('useUnifiedTopology', true);
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(TokenCheckMiddleware);
 
-// app.use('/', indexRouter);
-// app.use(router_config.api + router_config.account.url, usersRouter);
-app.use(router_config.api + router_config.account.url, accountRouter);
-app.use(router_config.api + router_config.grade_level.url, gradeLevelRouter);
-app.use(router_config.api + router_config.chapter.url, chapterRouter);
-app.use(router_config.api + router_config.lesson.url, lessonRouter);
-app.use(router_config.api + router_config.theory.url, theoryRouter);
-app.use(router_config.api + router_config.type_of_lesson.url, typeOfLessonRouter);
-app.use(router_config.api + router_config.example_exercise.url, exampleExerciseRouter);
+// use TokenCheckMiddleware
+app.use(TokenCheckMiddleware);  
+
+// use routers
+
+app.use(`${process.env.api}${process.env.account}`, accountRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -53,7 +49,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-let use = app.use(function(err, req, res, next) {
+app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
