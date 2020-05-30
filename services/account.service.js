@@ -1,4 +1,3 @@
-var express = require('express');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
@@ -118,8 +117,8 @@ const createAccount = async(req, res)  => {
 
     } catch(err) {
         return res.status(400).json({
-            'message': 'Bad request!',
-            'error': err,
+            message: 'Bad request!',
+            error: err.message,
         })
     }
 }
@@ -161,13 +160,13 @@ const selectAccounts = async(req, res)  => {
             
             await AccountModule.find({
                 $and: query
-            }, '-password', {limit: limit, skip: offset}, function (err, response) {
+            }, '-password', {limit: limit, skip: offset}, (err, response) => {
                 if (err) res.status(400).json({'message': err});
                 else res.status(200).json({'data': response});
             });
             
         } else if (req.query.get_count == 1) {
-            await accountModule.count({}, function (err, response) {
+            await AccountModule.count({}, (err, response) => {
                 if (err) {
                     return res.status(400).json({'message': err});
                 } else {
@@ -177,8 +176,8 @@ const selectAccounts = async(req, res)  => {
         } else return req.status(400).json({'message': 'Not query!'});
     }catch (err) {
         return res.status(400).json({
-            'message': 'Bad Request',
-            'error': req.query.page
+            message: 'Bad Request',
+            error: err.message
         });
     }
 }
@@ -192,13 +191,13 @@ const getAccount = async(req, res)  => {
     try {
         if(req.params.id){
             let id = req.params.id;
-            await AccountModule.findById(id).select('-password').exec(function (err, response) {
+            await AccountModule.findById(id).select('-password').exec((err, response) => {
                 if(err) return res.status(400).json({'message': err});
-                else return res.status(200).json({'data': response});
+                else return res.status(200).json({data: response});
             });
         }
     } catch (err) {
-        return res.status(400).json({ message: 'Bad request!', err: err});
+        return res.status(400).json({ message: 'Bad request!', error: err.message});
     }
 }
 
@@ -236,7 +235,7 @@ const updateAccount = async(req, res) => {
                 let account = req.body;
                 await AccountModule.findByIdAndUpdate(req.params.id,{$set: account},{new: true})
                     .select('-password')
-                    .exec(function (err, response) {
+                    .exec((err, response) => {
                         if(err) return res.status(400).json({'message': err});
                         else  return res.status(200).json({'data': response});
                     }
@@ -244,7 +243,7 @@ const updateAccount = async(req, res) => {
             }
         }
     } catch (err) {
-        return res.status(400).json({ message: 'Bad request!', err: err});
+        return res.status(400).json({ message: 'Bad request!', error: err.message});
     }
 }
 
@@ -255,15 +254,15 @@ const deleteAccount = async(req, res)  => {
      */ 
     try {
         if(req.params.id){
-            await AccountModule.findByIdAndDelete(req.params.id).exec(function (err, response) {
-                if(err) return res.status(400).json({'message': err});
+            await AccountModule.findByIdAndDelete(req.params.id).exec((err, response) => {
+                if(err) return res.status(400).json({message: err});
                 else {
-                    return res.status(200).json({'message': 'Delete successful!'});
+                    return res.status(200).json({message: 'Delete successful!'});
                 }
             });
-        }else return res.status(400).json({'message': 'Not query!'});
+        }else return res.status(400).json({message: 'Not query!'});
     } catch (err) {
-        return res.status(400).json({ message: 'Bad request!', err: err});
+        return res.status(400).json({ message: 'Bad request!', error: err.message});
     }
 }
 

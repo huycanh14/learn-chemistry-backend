@@ -12,6 +12,7 @@ require('dotenv').config();
 
 // declare routers
 var accountRouter = require('./routes/account');
+var gradeRouter = require('./routes/grade');
 
 // declare TokenCheckMiddleware
 const TokenCheckMiddleware = require('./helpers/middleware.js');
@@ -42,6 +43,7 @@ app.use(TokenCheckMiddleware);
 // use routers
 
 app.use(`${process.env.api}${process.env.account}`, accountRouter);
+app.use(`${process.env.api}${process.env.grade}`, gradeRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
