@@ -1,18 +1,18 @@
 var express = require('express');
 var router = express.Router();
 
-var AccountService = require('../services/account.service.js');
+var AccountController = require('../controllers/account.controller.js');
 
 /* GET users listing. */
 /*router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });*/
-router.post(`${process.env.logopt_endpoint}`, AccountService.signIn);
-router.post(`${process.env.token_endpoint}`, AccountService.createToken);
-router.post("", AccountService.createAccount);
-router.get("", AccountService.selectAccounts);
-router.get("/:id", AccountService.getAccount);
-router.put("/:id", AccountService.updateAccount);
-router.delete("/:id", AccountService.deleteAccount);
+router.post(`${process.env.logopt_endpoint}`, AccountController.signIn);
+router.post(`${process.env.token_endpoint}`, AccountController.createToken);
+router.post("", AccountController.createAccount);
+router.get("", AccountController.selectAccounts);
+router.get("/:id", AccountController.getAccount);
+router.put("/:id", AccountController.updateAccount);
+router.delete("/:id", AccountController.deleteAccount);
 
 module.exports = router;

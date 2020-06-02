@@ -1,7 +1,7 @@
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
-var AccountModule = require('../modules/account.module.js');
+var Account = require('../models/account.model.js');
 var config = require('../helpers/config.js');
 var utils = require('../helpers/utils.js');
 
@@ -20,7 +20,7 @@ const signIn = async(req, res)  => {
      */
 
     let account = req.body; // Step 1
-    let data = await AccountModule.findOne({
+    let data = await Account.findOne({
         $or: [
             {'email': account.email},
             {'username': account.username}
@@ -91,7 +91,7 @@ const createAccount = async(req, res)  => {
     **/
     try {
         let password = bcrypt.hashSync(req.body.password, SALT);
-        let account = new AccountModule({
+        let account = new Account({
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             username: req.body.username,
@@ -158,7 +158,7 @@ const selectAccounts = async(req, res)  => {
             if (req.body.activated) query.push({'activated': req.body.activated});
             if (req.body.role_id) query.push({'role_id': req.body.role_id});
             
-            await AccountModule.find({
+            await Account.find({
                 $and: query
             }, '-password', {limit: limit, skip: offset}, (err, response) => {
                 if (err) res.status(400).json({'message': err});
@@ -166,7 +166,7 @@ const selectAccounts = async(req, res)  => {
             });
             
         } else if (req.query.get_count == 1) {
-            await AccountModule.count({}, (err, response) => {
+            await Account.count({}, (err, response) => {
                 if (err) {
                     return res.status(400).json({'message': err});
                 } else {
@@ -191,7 +191,7 @@ const getAccount = async(req, res)  => {
     try {
         if(req.params.id){
             let id = req.params.id;
-            await AccountModule.findById(id).select('-password').exec((err, response) => {
+            await Account.findById(id).select('-password').exec((err, response) => {
                 if(err) return res.status(400).json({'message': err});
                 else return res.status(200).json({data: response});
             });
@@ -214,13 +214,13 @@ const updateAccount = async(req, res) => {
     try {
         if(req.params.id){
             if(req.body.current_password){
-                await AccountModule.findById(req.params.id).exec( (err, response) => {
+                await Account.findById(req.params.id).exec( (err, response) => {
                     if(err) return res.status(400).json({'message': err});
                     else {
                         let check_password = bcrypt.compareSync(req.body.password, response.password);
                         if(check_password) {
                             let password = bcrypt.hashSync(req.body.password, SALT);
-                            AccountModule.findByIdAndUpdate(req.params.id, {$set:{'password': password}}, {new: true})
+                            Account.findByIdAndUpdate(req.params.id, {$set:{'password': password}}, {new: true})
                                 .select('-password')
                                 .exec((err, response) => {
                                     if(err) return res.status(400).json({'message': err});
@@ -233,7 +233,7 @@ const updateAccount = async(req, res) => {
                 });
             } else {
                 let account = req.body;
-                await AccountModule.findByIdAndUpdate(req.params.id,{$set: account},{new: true})
+                await Account.findByIdAndUpdate(req.params.id,{$set: account},{new: true})
                     .select('-password')
                     .exec((err, response) => {
                         if(err) return res.status(400).json({'message': err});
@@ -254,7 +254,7 @@ const deleteAccount = async(req, res)  => {
      */ 
     try {
         if(req.params.id){
-            await AccountModule.findByIdAndDelete(req.params.id).exec((err, response) => {
+            await Account.findByIdAndDelete(req.params.id).exec((err, response) => {
                 if(err) return res.status(400).json({message: err});
                 else {
                     return res.status(200).json({message: 'Delete successful!'});
@@ -266,9 +266,9 @@ const deleteAccount = async(req, res)  => {
     }
 }
 
-const AccountService = {
+const AccountController = {
     signIn, createToken, createAccount, selectAccounts, getAccount, updateAccount, deleteAccount
 }
 
 
-module.exports = AccountService;
+module.exports = AccountController;

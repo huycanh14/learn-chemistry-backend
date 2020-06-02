@@ -1,4 +1,4 @@
-var GradeModule = require('../modules/grade.module');
+var Grade = require('../models/grade.model');
 
 const createGrade = async(req, res)  => {
     /**
@@ -8,7 +8,7 @@ const createGrade = async(req, res)  => {
      * >>> else return status (400) , message: 'Bad request' and error
     **/
     try {
-        let grade = await GradeModule({
+        let grade = await Grade({
             name: req.body.name,
             created_at: req.body.created_at,
             updated_at: req.body.updated_at,
@@ -54,14 +54,14 @@ const selectGrades = async(req, res)  => {
             ];
             
             if (req.body.activated) query.push({'activated': req.body.activated});
-            await GradeModule.find({
+            await Grade.find({
                 $and: query
             }, null, {limit: limit, skip: offset}, (err, response) => {
                 if (err) res.status(400).json({'message': err});
                 else res.status(200).json({'data': response});
             });
         } else if (req.query.get_count == 1) {
-            await GradeModule.count({}, (err, response) => {
+            await Grade.count({}, (err, response) => {
                 if (err) {
                     return res.status(400).json({'message': err});
                 } else {
@@ -81,7 +81,7 @@ const getGrade = async (req, res) => {
      */
     try {
         let id = req.params.id;
-        await GradeModule.findById(id).exec((err, response) => {
+        await Grade.findById(id).exec((err, response) => {
             if(err) return res.status(400).json({'message': err});
             else return res.status(200).json({'data': response});
         });
@@ -96,7 +96,7 @@ const updateGrade = async (req, res)  => {
      * else findByIdAndUpdate set grade = req.body
      */ 
     try {
-        await GradeModule.findByIdAndUpdate(req.params.id, {$set: req.body},{new: true})
+        await Grade.findByIdAndUpdate(req.params.id, {$set: req.body},{new: true})
             .exec( (err, response) => {
                 if(err) return res.status(400).json({message: err});
                 else return res.status(200).json({data: response});
@@ -113,8 +113,8 @@ const deleteGrade = async(req, res) => {
      */ 
 };
 
-const GradeService = {
+const GradeController = {
     createGrade, selectGrades, getGrade, updateGrade,
 };
 
-module.exports = GradeService;
+module.exports = GradeController;

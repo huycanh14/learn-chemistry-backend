@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-var GradeServer = require('../services/grade.service');
+var GradeController = require('../controllers/grade.controller');
 
-router.post("", GradeServer.createGrade);
-router.get("", GradeServer.selectGrades);
-router.get("/:id", GradeServer.getGrade);
-router.put("/:id", GradeServer.updateGrade);
+router.post("", GradeController.createGrade);
+router.get("", GradeController.selectGrades);
+router.get("/:id", GradeController.getGrade);
+router.put("/:id", GradeController.updateGrade);
 
 module.exports = router;
