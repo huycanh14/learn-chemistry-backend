@@ -32,9 +32,25 @@ const createChapter = async(req, res)  => {
     }
 };
 
+const selectChapter = async(req, res)  => {
+
+};
+
+const getChapter = async(req, res) => {
+
+};
+
+const updateChapter = async(req, res)  => {
+
+};
+
+const deleteChapter = async(req, res) => {
+
+};
+
 
 const ChapterController = {
-    createChapter
+    createChapter, selectGrades, getChapter, updateChapter, deleteChapter
 };
 
 module.exports = ChapterController;
