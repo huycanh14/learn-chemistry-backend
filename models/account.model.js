@@ -2,6 +2,10 @@ var mongoose = require("mongoose");
 mongoose.set('useCreateIndex', true);
 
 const Accounts = new mongoose.Schema({
+    _id: { 
+        type: mongoose.Schema.ObjectId, 
+        auto: true 
+    },
     first_name: {
         type: String,
         required: true

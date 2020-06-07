@@ -1,25 +1,33 @@
 var mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
 
-const Chapters = new mongoose.Schema({
+const Explains = new mongoose.Schema({
     _id: { 
         type: mongoose.Schema.ObjectId, 
         auto: true 
     },
-    chapter_number: {
-        type: Number,
-        required: true
-    },
-    title: {
-        type: String,
-        required: true
-    },
-    description: {
+    content: {
         type: String,
         required: true
     },
     relationships: {
         grade_id: {
+            type: String,
+            required: true
+        },
+        chapter_id: {
+            type: String,
+            required: true
+        },
+        lesson_id: {
+            type: String,
+            required: false
+        },
+        example_id: {
+            type: String,
+            required: false,
+        },
+        question_id: { 
             type: String,
             required: true
         }
@@ -41,4 +49,4 @@ const Chapters = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('chapters', Chapters, 'chapters');
+module.exports = mongoose.model('explains', Explains, 'explains');

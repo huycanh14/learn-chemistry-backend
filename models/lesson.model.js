@@ -1,14 +1,14 @@
 var mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
 
-const Chapters = new mongoose.Schema({
+const Lessons = new mongoose.Schema({
     _id: { 
         type: mongoose.Schema.ObjectId, 
         auto: true 
     },
-    chapter_number: {
+    lesson_number: {
         type: Number,
-        required: true
+        required: true,
     },
     title: {
         type: String,
@@ -20,6 +20,10 @@ const Chapters = new mongoose.Schema({
     },
     relationships: {
         grade_id: {
+            type: String,
+            required: true
+        },
+        chapter_id: {
             type: String,
             required: true
         }
@@ -41,4 +45,4 @@ const Chapters = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('chapters', Chapters, 'chapters');
+module.exports = mongoose.model('lessons', Lessons, 'lessons');

@@ -8,7 +8,7 @@ const createGrade = async(req, res)  => {
      * >>> else return status (400) , message: 'Bad request' and error
     **/
     try {
-        let grade = await Grade({
+        let grade = new Grade({
             name: req.body.name,
             created_at: req.body.created_at,
             updated_at: req.body.updated_at,

@@ -5,3 +5,5 @@ jsonwebtoken:
         + https://codetheworld.io/nodejs-xac-thuc-nguoi-dung-su-dung-jwt-va-co-che-refresh-token.html
 
 run app: npm start
+
+Xây dựng hệ thống theo hướng chức năng
