@@ -7,5 +7,6 @@ router.post("", GradeController.createGrade);
 router.get("", GradeController.selectGrades);
 router.get("/:id", GradeController.getGrade);
 router.put("/:id", GradeController.updateGrade);
+router.delete("/:id", GradeController.deleteGrade);
 
 module.exports = router;

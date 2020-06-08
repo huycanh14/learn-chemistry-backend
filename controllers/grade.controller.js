@@ -106,15 +106,44 @@ const updateGrade = async (req, res)  => {
     }
 };
 
-const deleteGrade = async(req, res) => {
+/*
+const deleteGrade = async(req, res, next) => {
+    /**
+     * get id grade from params
+     * else findByIdAndDelete set grade = req.body
+     
+    try {
+        await Grade.findByIdAndRemove(req.params.id, (err) => {
+            if(err) return res.status(400).json({message: err});
+            else {
+                return res.status(200).json({message: 'Delete successful!'});
+            }
+        });
+    } catch (err) {
+        return res.status(400).json({ message: 'Bad request!', error: err.message});
+    }
+};
+*/
+const deleteGrade = async(req, res, next) => {
     /**
      * get id grade from params
      * else findByIdAndDelete set grade = req.body
      */ 
+    try {
+        // await Grade.findByIdAndDelete({_id: req.params.id}).exec( (err) => {
+        await Grade.findByIdAndDelete(req.params.id).exec( (err) => {
+            if(err) return res.status(400).json({message: err.message});
+            else {
+                return res.status(200).json({message: 'Delete successful!'});
+            }
+        });
+    } catch (err) {
+        return res.status(400).json({ message: 'Bad request!', error: err.message});
+    }
 };
 
 const GradeController = {
-    createGrade, selectGrades, getGrade, updateGrade,
+    createGrade, selectGrades, getGrade, updateGrade, deleteGrade
 };
 
 module.exports = GradeController;
