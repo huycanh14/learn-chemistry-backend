@@ -1,4 +1,33 @@
 var Grade = require('../models/grade.model');
+var { RELATIONSHIPS_IN_GRADE } =  require('../helpers/list_model');
+
+var getCountInRelationships = async(req, res) => {
+    /**
+     * get count item in relationships: answer, chapter, document, explain, grade, lesson, question, theory, type_of_lesson
+     * return count
+     */  
+
+    try {
+        var id = req.body.grade_id;
+        var data = [];
+        const listRelationships = RELATIONSHIPS_IN_GRADE.map(item => {
+            return new Promise((resolve, reject) => item.countDocuments({'relationships.grade_id': id}, (err, response) => {
+                if(err) reject(err);
+                else resolve(`${item.modelName} : ${response}`);
+            }));
+        });
+        await Promise.all(listRelationships)
+            .then(result =>{
+                data = result;
+            })
+            .catch(error => {
+                return status(400).json({message: new Error(error)})
+            });
+        return res.status(200).json({data: data});
+    } catch(err){
+        return res.status(400).json({ message: 'Bad request!', error: err.message });
+    }
+};
 
 const createGrade = async(req, res)  => {
     /**
@@ -34,14 +63,15 @@ const selectGrades = async(req, res)  => {
      * >>> get name = req.body.name => select name by key_work
      * >>> get activated
      * >>> find 
-     * else req.query.get_count == 1 => get total count
+     * else if req.query.get_count == 1 => get total count
+     * els if req.query.relationships == 1 and grade_id = req.body.grade_id => get Count In Relationships
      * else return status(400) and message: 'Not query!'
      */
     try {
-        let limit = 10;
-        let offset = 10;
-        let query = [];
         if(req.query.page){
+            let limit = 10;
+            let offset = 10;
+            let query = [];
             offset = (req.query.page - 1) * 10;
             let name = "";
             if (req.body.name) name = req.body.name;
@@ -61,13 +91,16 @@ const selectGrades = async(req, res)  => {
                 else res.status(200).json({'data': response});
             });
         } else if (req.query.get_count == 1) {
-            await Grade.count({}, (err, response) => {
+            await Grade.countDocuments({}, (err, response) => {
                 if (err) {
                     return res.status(400).json({'message': err});
                 } else {
                     return res.status(200).json({'count': response});
                 }
             });
+        // } else return req.status(400).json({'message': 'Not query!'});
+        } else if (req.query.relationships == 1 && req.body.grade_id){
+            getCountInRelationships(req, res);
         } else return req.status(400).json({'message': 'Not query!'});
     } catch (err) {
         return res.status(400).json({ message: 'Bad request!', error: err.message});
@@ -90,6 +123,7 @@ const getGrade = async (req, res) => {
     }
 };
 
+
 const updateGrade = async (req, res)  => {
     /**
      * get id grade from params
@@ -106,24 +140,6 @@ const updateGrade = async (req, res)  => {
     }
 };
 
-/*
-const deleteGrade = async(req, res, next) => {
-    /**
-     * get id grade from params
-     * else findByIdAndDelete set grade = req.body
-     
-    try {
-        await Grade.findByIdAndRemove(req.params.id, (err) => {
-            if(err) return res.status(400).json({message: err});
-            else {
-                return res.status(200).json({message: 'Delete successful!'});
-            }
-        });
-    } catch (err) {
-        return res.status(400).json({ message: 'Bad request!', error: err.message});
-    }
-};
-*/
 const deleteGrade = async(req, res, next) => {
     /**
      * get id grade from params
@@ -143,7 +159,7 @@ const deleteGrade = async(req, res, next) => {
 };
 
 const GradeController = {
-    createGrade, selectGrades, getGrade, updateGrade, deleteGrade
+    createGrade, selectGrades, getGrade, getCountInRelationships, updateGrade, deleteGrade
 };
 
 module.exports = GradeController;

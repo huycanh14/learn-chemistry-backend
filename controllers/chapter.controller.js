@@ -96,6 +96,10 @@ const getChapter = async(req, res) => {
     }
 };
 
+const getCountInRelationships = async(req, res) => {
+    
+};
+
 const updateChapter = async(req, res)  => {
     /**
      * get id chapter from params
