@@ -45,7 +45,6 @@ Grades.pre('findOneAndDelete', async function (next) {
             .catch(error => {
                 return next(new Error(`Error in promises ${error}`));
             });
-        console.log( 2);
 
     } catch (err) {
         next(err);

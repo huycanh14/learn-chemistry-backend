@@ -1,5 +1,35 @@
 var Chapter = require('../models/chapter.model');
 
+var { RELATIONSHIPS_IN_CHAPTER } =  require('../helpers/list_model');
+
+var getCountInRelationships = async(req, res) => {
+    /**
+     * get count item in relationships: answer, chapter, document, explain, grade, lesson, question, theory, type_of_lesson
+     * return count
+     */  
+
+    try {
+        var id = req.body.chapter_id;
+        var data = [];
+        const listRelationships = RELATIONSHIPS_IN_CHAPTER.map(item => {
+            return new Promise((resolve, reject) => item.countDocuments({'relationships.chapter_id;': id}, (err, response) => {
+                if(err) reject(err);
+                else resolve(`${item.modelName} : ${response}`);
+            }));
+        });
+        await Promise.all(listRelationships)
+            .then(result =>{
+                data = result;
+            })
+            .catch(error => {
+                return status(400).json({message: new Error(error)})
+            });
+        return res.status(200).json({data: data});
+    } catch(err){
+        return res.status(400).json({ message: 'Bad request!', error: err.message });
+    }
+};
+
 const createChapter = async(req, res)  => {
     /**
      * Step 1: get information of new chapter from the client via the body
@@ -40,7 +70,8 @@ const selectChapters = async(req, res)  => {
      * >>> get activated
      * >> get grade_id by req.body.grade_id
      * >>> find 
-     * else req.query.get_count == 1 => get total count
+     * else if req.query.get_count == 1 => get total count
+     * else if req.query.relationships == 1 => get count in relationships
      * else return status(400) and message: 'Not query!'
      */
     try {
@@ -75,6 +106,8 @@ const selectChapters = async(req, res)  => {
                     return res.status(200).json({'count': response});
                 }
             });
+        } else if (req.query.relationships == 1 && req.body.chapter_id){
+            getCountInRelationships(req, res);
         } else return req.status(400).json({'message': 'Not query!'});
     } catch(err) {
         return res.status(400).json({ message: 'Bad request!', error: err.message})
@@ -96,9 +129,6 @@ const getChapter = async(req, res) => {
     }
 };
 
-const getCountInRelationships = async(req, res) => {
-    
-};
 
 const updateChapter = async(req, res)  => {
     /**

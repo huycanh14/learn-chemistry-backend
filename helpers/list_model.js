@@ -12,4 +12,9 @@ const RELATIONSHIPS_IN_GRADE = [
     Chapter, Lesson, Theory, TypeOfLesson, Question, Answer, Explain, Document
 ];
 
+const RELATIONSHIPS_IN_CHAPTER = [
+    Lesson, Theory, TypeOfLesson, Question, Answer, Explain, Document
+];
+
 module.exports =  { RELATIONSHIPS_IN_GRADE: RELATIONSHIPS_IN_GRADE } 
+module.exports =  { RELATIONSHIPS_IN_CHAPTER: RELATIONSHIPS_IN_CHAPTER }

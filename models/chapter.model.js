@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
 
+var { RELATIONSHIPS_IN_CHAPTER } = require('../helpers/list_model');
+
 const Chapters = new mongoose.Schema({
     _id: { 
         type: mongoose.Schema.ObjectId, 
@@ -39,6 +41,28 @@ const Chapters = new mongoose.Schema({
         default: true
         // true => active, false => nonactive
     }
+});
+
+Chapters.pre('findOneAndDelete', async function (next) {
+    try{
+        var id = this._conditions._id;
+        const deleteRelationships = RELATIONSHIPS_IN_CHAPTER.map(item => {
+            return new Promise((resolve, reject) => item.findOneAndRemove({'relationships.chapter_id': id}).deleteMany().exec((err, response) => {
+                if(err) reject(err);
+                else resolve(response);
+            }));
+        });
+        
+        await Promise.all(deleteRelationships)
+            .then((result) => next())
+            .catch(error => {
+                return next(new Error(`Error in promises ${error}`));
+            });
+
+    } catch (err) {
+        next(err);
+    }
+    
 });
 
 module.exports = mongoose.model('chapters', Chapters, 'chapters');
