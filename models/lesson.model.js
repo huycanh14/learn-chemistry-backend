@@ -47,7 +47,7 @@ const Lessons = new mongoose.Schema({
     }
 });
 
-Grades.pre('findOneAndDelete', async function (next) {
+Lessons.pre('findOneAndDelete', async function (next) {
     try{
         var id = this._conditions._id;
         const deleteRelationships = RELATIONSHIPS_IN_LESSON.map(item => {

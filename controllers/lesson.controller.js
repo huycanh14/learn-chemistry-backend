@@ -138,7 +138,7 @@ const selectLessons = async(req, res)  => {
 const getLesson = async(req, res) => {
     /**
      * Step 1: get id lesson from params
-     * Step 2: get grade by id
+     * Step 2: get lesson by id
     */ 
     try {
         await Lesson.findById(req.params.id).exec((err, response) => {
