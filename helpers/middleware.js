@@ -28,7 +28,7 @@ const TokenCheckMiddleware = async (req, res, next) => {
                 next();
             } catch (err) {
                 //Giải mã gặp lỗi: Không đúng, hết hạn....
-                console.error(err)
+                // console.error(err)
                 return res.status(401).json({
                     message: "Unauthorized access."
                 });

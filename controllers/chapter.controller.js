@@ -4,7 +4,7 @@ var { RELATIONSHIPS_IN_CHAPTER } =  require('../helpers/list_model');
 
 var getCountInRelationships = async(req, res) => {
     /**
-     * get count item in relationships: answer, chapter, document, explain, grade, lesson, question, theory, type_of_lesson
+     * get count item in relationships: answer, document, explain, grade, lesson, question, theory, type_of_lesson
      * return count
      */  
 
@@ -12,7 +12,7 @@ var getCountInRelationships = async(req, res) => {
         var id = req.body.chapter_id;
         var data = [];
         const listRelationships = RELATIONSHIPS_IN_CHAPTER.map(item => {
-            return new Promise((resolve, reject) => item.countDocuments({'relationships.chapter_id;': id}, (err, response) => {
+            return new Promise((resolve, reject) => item.countDocuments({'relationships.chapter_id': id}, (err, response) => {
                 if(err) reject(err);
                 else resolve(`${item.modelName} : ${response}`);
             }));
@@ -71,7 +71,7 @@ const selectChapters = async(req, res)  => {
      * >> get grade_id by req.body.grade_id
      * >>> find 
      * else if req.query.get_count == 1 => get total count
-     * else if req.query.relationships == 1 => get count in relationships
+     * else if req.query.relationships == 1 and req.body.chapter_id => get count in relationships
      * else return status(400) and message: 'Not query!'
      */
     try {
@@ -99,7 +99,7 @@ const selectChapters = async(req, res)  => {
                 else res.status(200).json({'data': response});
             });
         } else if (req.query.get_count == 1) {
-            await Chapter.count({}, (err, response) => {
+            await Chapter.countDocuments({}, (err, response) => {
                 if (err) {
                     return res.status(400).json({'message': err});
                 } else {
@@ -116,8 +116,8 @@ const selectChapters = async(req, res)  => {
 
 const getChapter = async(req, res) => {
     /**
-     *  get id chapter from params
-     *  get chapter by id
+     *  Step 1: get id chapter from params
+     *  Step 2: get chapter by id
      */
     try {
         await Chapter.findById(req.params.id).exec((err, response) => {
@@ -132,10 +132,11 @@ const getChapter = async(req, res) => {
 
 const updateChapter = async(req, res)  => {
     /**
-     * get id chapter from params
-     * else findByIdAndUpdate set chapter = req.body
+     * Step 1: get id chapter from params
+     * Step 2: findByIdAndUpdate set chapter = req.body
      */ 
     try {
+        req.body.updated_at = req.body.updated_at ? req.body.updated_at : new Date();
         await Chapter.findByIdAndUpdate(req.params.id, {$set: req.body},{new: true})
             .exec( (err, response) => {
                 if(err) return res.status(400).json({message: err});
@@ -148,7 +149,20 @@ const updateChapter = async(req, res)  => {
 };
 
 const deleteChapter = async(req, res) => {
-
+    /**
+     * Step 1: get id chapter from params
+     * Step 2: findByIdAndDelete set chapter = req.body
+    */
+    try {
+        await Chapter.findByIdAndDelete(req.params.id).exec( (err) => {
+            if(err) return res.status(400).json({message: err.message});
+            else {
+                return res.status(200).json({message: 'Delete successful!'});
+            }
+        });
+    } catch (err) {
+        return res.status(400).json({ message: 'Bad request!', error: err.message});
+    }
 };
 
 

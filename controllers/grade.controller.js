@@ -126,10 +126,11 @@ const getGrade = async (req, res) => {
 
 const updateGrade = async (req, res)  => {
     /**
-     * get id grade from params
-     * else findByIdAndUpdate set grade = req.body
+     * Step 1: get id grade from params
+     * Step 2: findByIdAndUpdate set grade = req.body
      */ 
     try {
+        req.body.updated_at = req.body.updated_at ? req.body.updated_at : new Date();
         await Grade.findByIdAndUpdate(req.params.id, {$set: req.body},{new: true})
             .exec( (err, response) => {
                 if(err) return res.status(400).json({message: err});
@@ -142,11 +143,10 @@ const updateGrade = async (req, res)  => {
 
 const deleteGrade = async(req, res, next) => {
     /**
-     * get id grade from params
-     * else findByIdAndDelete set grade = req.body
+     * Step 1: get id grade from params
+     * Step 2: findByIdAndDelete set grade = req.body
      */ 
     try {
-        // await Grade.findByIdAndDelete({_id: req.params.id}).exec( (err) => {
         await Grade.findByIdAndDelete(req.params.id).exec( (err) => {
             if(err) return res.status(400).json({message: err.message});
             else {
