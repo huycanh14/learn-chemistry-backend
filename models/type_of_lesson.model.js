@@ -45,4 +45,27 @@ const TypeOfLessons = new mongoose.Schema({
     }
 });
 
+TypeOfLessons.pre('findOneAndDelete', async function (next) {
+    try{
+        let { RELATIONSHIPS_IN_TYPE_OF_LESSON } =  require("../helpers/list_model");
+        let id = this._conditions._id;
+        const deleteRelationships = RELATIONSHIPS_IN_TYPE_OF_LESSON.map(item => {
+            return new Promise((resolve, reject) => item.findOneAndRemove({'relationships.example_id': id}).deleteMany().exec((err, response) => {
+                if(err) reject(err);
+                else resolve(response);
+            }));
+        });
+        
+        await Promise.all(deleteRelationships)
+            .then((result) => next())
+            .catch(error => {
+                return next(new Error(`Error in promises ${error}`));
+            });
+
+    } catch (err) {
+        next(err);
+    }
+    
+});
+
 module.exports = mongoose.model('type_of_lessons', TypeOfLessons, 'type_of_lessons');

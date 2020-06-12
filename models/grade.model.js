@@ -1,9 +1,7 @@
 var mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
 
-var { RELATIONSHIPS_IN_GRADE } =  require('../helpers/list_model');
-
-var Grades = new mongoose.Schema({
+const Grades = new mongoose.Schema({
     _id: { 
         type: mongoose.Schema.ObjectId, 
         auto: true 
@@ -32,7 +30,8 @@ var Grades = new mongoose.Schema({
 
 Grades.pre('findOneAndDelete', async function (next) {
     try{
-        var id = this._conditions._id;
+        let { RELATIONSHIPS_IN_GRADE }  = require('../helpers/list_model');
+        let id = this._conditions._id;
         const deleteRelationships = RELATIONSHIPS_IN_GRADE.map(item => {
             return new Promise((resolve, reject) => item.findOneAndRemove({'relationships.grade_id': id}).deleteMany().exec((err, response) => {
                 if(err) reject(err);

@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
 
-var RELATIONSHIPS_IN_LESSON = require('../helpers/list_model');
+// var RELATIONSHIPS  = require('../helpers/list_model');
+// import {RELATIONSHIPS_IN_LESSON} from '../helpers/list_model';
 
 const Lessons = new mongoose.Schema({
     _id: { 
@@ -49,6 +50,7 @@ const Lessons = new mongoose.Schema({
 
 Lessons.pre('findOneAndDelete', async function (next) {
     try{
+        let { RELATIONSHIPS_IN_LESSON }  = require('../helpers/list_model');
         var id = this._conditions._id;
         const deleteRelationships = RELATIONSHIPS_IN_LESSON.map(item => {
             return new Promise((resolve, reject) => item.findOneAndRemove({'relationships.lesson_id': id}).deleteMany().exec((err, response) => {

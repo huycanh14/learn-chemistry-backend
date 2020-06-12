@@ -1,5 +1,6 @@
 var Grade = require('../models/grade.model');
-var { RELATIONSHIPS_IN_GRADE } =  require('../helpers/list_model');
+
+const { RELATIONSHIPS_IN_GRADE } =  require('../helpers/list_model');
 
 var getCountInRelationships = async(req, res) => {
     /**

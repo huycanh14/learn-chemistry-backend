@@ -1,6 +1,6 @@
 var Chapter = require('../models/chapter.model');
 
-var { RELATIONSHIPS_IN_CHAPTER } =  require('../helpers/list_model');
+const { RELATIONSHIPS_IN_CHAPTER } =  require('../helpers/list_model');
 
 var getCountInRelationships = async(req, res) => {
     /**

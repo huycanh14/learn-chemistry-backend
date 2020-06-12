@@ -16,6 +16,7 @@ var gradeRouter = require('./routes/grade');
 var chapterRouter = require("./routes/chapter");
 var lessonRouter = require('./routes/lesson');
 var theoryRouter = require('./routes/theory');
+var typeOfLessonRouter = require('./routes/type_of_lesson');
 
 // declare TokenCheckMiddleware
 const TokenCheckMiddleware = require('./helpers/middleware.js');
@@ -50,6 +51,7 @@ app.use(`${process.env.api}${process.env.grade}`, gradeRouter);
 app.use(`${process.env.api}${process.env.chapter}`, chapterRouter);
 app.use(`${process.env.api}${process.env.lesson}`, lessonRouter);
 app.use(`${process.env.api}${process.env.theory}`, theoryRouter);
+app.use(`${process.env.api}${process.env.type_of_lesson}`, typeOfLessonRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
