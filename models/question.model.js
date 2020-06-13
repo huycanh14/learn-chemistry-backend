@@ -60,4 +60,27 @@ const Questions = new mongoose.Schema({
     }
 });
 
+Questions.pre('findOneAndDelete', async function (next) {
+    try{
+        let { RELATIONSHIPS_IN_QUESTION }  = require('../helpers/list_model');
+        let id = this._conditions._id;
+        const deleteRelationships = RELATIONSHIPS_IN_QUESTION.map(item => {
+            return new Promise((resolve, reject) => item.findOneAndRemove({'relationships.question_id': id}).deleteMany().exec((err, response) => {
+                if(err) reject(err);
+                else resolve(response);
+            }));
+        });
+        
+        await Promise.all(deleteRelationships)
+            .then((result) => next())
+            .catch(error => {
+                return next(new Error(`Error in promises ${error}`));
+            });
+
+    } catch (err) {
+        next(err);
+    }
+    
+});
+
 module.exports = mongoose.model('questions', Questions, 'questions');

@@ -1,9 +1,6 @@
 var mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
 
-// var RELATIONSHIPS  = require('../helpers/list_model');
-// import {RELATIONSHIPS_IN_LESSON} from '../helpers/list_model';
-
 const Lessons = new mongoose.Schema({
     _id: { 
         type: mongoose.Schema.ObjectId, 

@@ -24,6 +24,10 @@ const RELATIONSHIPS_IN_TYPE_OF_LESSON = [
     Question, Answer, Explain
 ];
 
+const RELATIONSHIPS_IN_QUESTION = [
+    Answer, Explain
+]
+
 /**
  * exports.RELATIONSHIPS_IN_GRADE = [
     Chapter, Lesson, Theory, TypeOfLesson, Question, Answer, Explain, Document
@@ -46,4 +50,5 @@ module.exports =  {
     RELATIONSHIPS_IN_CHAPTER: RELATIONSHIPS_IN_CHAPTER,
     RELATIONSHIPS_IN_LESSON: RELATIONSHIPS_IN_LESSON,
     RELATIONSHIPS_IN_TYPE_OF_LESSON: RELATIONSHIPS_IN_TYPE_OF_LESSON,
+    RELATIONSHIPS_IN_QUESTION: RELATIONSHIPS_IN_QUESTION
 };
