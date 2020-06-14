@@ -18,6 +18,7 @@ var lessonRouter = require('./routes/lesson');
 var theoryRouter = require('./routes/theory');
 var typeOfLessonRouter = require('./routes/type_of_lesson');
 var questionRouter = require('./routes/question');
+var answerRouter = require('./routes/answer');
 
 // declare TokenCheckMiddleware
 const TokenCheckMiddleware = require('./helpers/middleware.js');
@@ -54,6 +55,7 @@ app.use(`${process.env.api}${process.env.lesson}`, lessonRouter);
 app.use(`${process.env.api}${process.env.theory}`, theoryRouter);
 app.use(`${process.env.api}${process.env.type_of_lesson}`, typeOfLessonRouter);
 app.use(`${process.env.api}${process.env.question}`, questionRouter);
+app.use(`${process.env.api}${process.env.answer}`, answerRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
