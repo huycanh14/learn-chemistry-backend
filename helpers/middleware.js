@@ -11,16 +11,16 @@ const LINK_NEXT = [
 
 const TokenCheckMiddleware = async (req, res, next) => {
     //Lấy thông tin mã access_token được đính kèm trong request
-    console.dir(req.originalUrl) // '/admin/new?a=b' (WARNING: beware query string)
-    console.dir(req.baseUrl) // '/admin'
-    console.dir(req.path) // '/new'
-    console.dir(req.baseUrl + req.path)
-    next();
-    /*
+    // console.dir(req.originalUrl) // '/admin/new?a=b' (WARNING: beware query string)
+    // console.dir(req.baseUrl) // '/admin'
+    // console.dir(req.path) // '/new'
+    // console.dir(req.baseUrl + req.path)
+    // next();
+    
     const access_token = req.headers.access_token || req.query.access_token || req.headers['x-access-token'];
     //kiểm tra có phải đang ở trang router và ở method POST ko -> ko cho kiểm tra token
 
-    if((LINK_NEXT.includes(`${req.baseUrl}${req.path}`)) && req.method === 'POST'){
+    if((LINK_NEXT.includes(req.pathname)) && req.method === 'POST'){
         next(); 
     } else {
         //decode token
@@ -45,7 +45,7 @@ const TokenCheckMiddleware = async (req, res, next) => {
             });
         }
     }
-    */
+    
 }
 
 module.exports = TokenCheckMiddleware;
