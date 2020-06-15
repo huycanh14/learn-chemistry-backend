@@ -7,3 +7,6 @@ jsonwebtoken:
 run app: npm start
 
 Xây dựng hệ thống theo hướng chức năng
+
+http://127.0.0.1:3000
+https://api-learn-chemistry.herokuapp.com/

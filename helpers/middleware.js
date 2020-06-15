@@ -14,7 +14,7 @@ const TokenCheckMiddleware = async (req, res, next) => {
     
     const access_token = req.headers.access_token || req.query.access_token || req.headers['x-access-token'];
     //kiểm tra có phải đang ở trang router và ở method POST ko -> ko cho kiểm tra token
-    
+    console.log(req.path);
     if((LINK_NEXT.includes(req.path)) && req.method === 'POST'){
         next(); 
     } else {
