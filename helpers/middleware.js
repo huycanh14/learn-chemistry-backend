@@ -1,3 +1,4 @@
+var url = require('url');
 var express = require('express');
 var jwt = require('jsonwebtoken');
 var config = require('./config.js');
@@ -19,8 +20,8 @@ const TokenCheckMiddleware = async (req, res, next) => {
     
     const access_token = req.headers.access_token || req.query.access_token || req.headers['x-access-token'];
     //kiểm tra có phải đang ở trang router và ở method POST ko -> ko cho kiểm tra token
-
-    if((LINK_NEXT.includes(req.pathname)) && req.method === 'POST'){
+    var q = url.parse(req.path, true);
+    if((LINK_NEXT.includes(q.pathname)) && req.method === 'POST'){
         next(); 
     } else {
         //decode token
@@ -41,7 +42,7 @@ const TokenCheckMiddleware = async (req, res, next) => {
         } else {
             // không tìm thấy access_token trong request
             return res.status(403).send({
-                message: JSON.safeStringify(res),
+                message: "No token provided",
             });
         }
     }
