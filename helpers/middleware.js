@@ -1,13 +1,11 @@
-var url = require('url');
-var express = require('express');
-var jwt = require('jsonwebtoken');
+
 var config = require('./config.js');
 var utils = require('./utils.js');
 
 const LINK_NEXT = [
-    process.env.api + process.env.account + process.env.logopt_endpoint, // sign in
-    process.env.api + process.env.account + process.env.token_endpoint, // create token
-    process.env.api + process.env.account // create account
+    (process.env.api + process.env.account + process.env.logopt_endpoint).toString(), // sign in
+    (process.env.api + process.env.account + process.env.token_endpoint).toString(), // create token
+    (process.env.api + process.env.account).toString() // create account
 ];
 
 const TokenCheckMiddleware = async (req, res, next) => {
@@ -20,8 +18,8 @@ const TokenCheckMiddleware = async (req, res, next) => {
     
     const access_token = req.headers.access_token || req.query.access_token || req.headers['x-access-token'];
     //kiểm tra có phải đang ở trang router và ở method POST ko -> ko cho kiểm tra token
-    var q = url.parse(req.path, true);
-    if((LINK_NEXT.includes(q.pathname)) && req.method === 'POST'){
+
+    if((LINK_NEXT.includes(req.originalUrl.toString())) && req.method === 'POST'){
         next(); 
     } else {
         //decode token
@@ -36,11 +34,7 @@ const TokenCheckMiddleware = async (req, res, next) => {
                 //Giải mã gặp lỗi: Không đúng, hết hạn....
                 // console.error(err)
                 return res.status(401).json({
-                    // message: "Unauthorized access."
-                    message: [req.originalUrl, // '/admin/new?a=b' (WARNING: beware query string)
-                    req.baseUrl, // '/admin'
-                    req.path, // '/new'
-                    req.baseUrl + req.path, ]
+                    message: "Unauthorized access."
                 });
             }
         } else {
