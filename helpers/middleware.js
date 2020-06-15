@@ -15,7 +15,7 @@ const TokenCheckMiddleware = async (req, res, next) => {
     const access_token = req.headers.access_token || req.query.access_token || req.headers['x-access-token'];
     //kiểm tra có phải đang ở trang router và ở method POST ko -> ko cho kiểm tra token
 
-    if((LINK_NEXT.includes(req.originalUrl)) && req.method === 'POST'){
+    if((LINK_NEXT.includes(`${req.baseUrl}${req.path}`)) && req.method === 'POST'){
         next(); 
     } else {
         //decode token
@@ -35,10 +35,9 @@ const TokenCheckMiddleware = async (req, res, next) => {
             }
         } else {
             // không tìm thấy access_token trong request
-            // return res.status(403).send({
-            //     message: JSON.safeStringify(res),
-            // });
-            res.send(req.body);
+            return res.status(403).send({
+                message: JSON.safeStringify(res),
+            });
         }
     }
 }
