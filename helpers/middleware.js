@@ -36,7 +36,11 @@ const TokenCheckMiddleware = async (req, res, next) => {
                 //Giải mã gặp lỗi: Không đúng, hết hạn....
                 // console.error(err)
                 return res.status(401).json({
-                    message: "Unauthorized access."
+                    // message: "Unauthorized access."
+                    message: [req.originalUrl, // '/admin/new?a=b' (WARNING: beware query string)
+                    req.baseUrl, // '/admin'
+                    req.path, // '/new'
+                    req.baseUrl + req.path, ]
                 });
             }
         } else {
