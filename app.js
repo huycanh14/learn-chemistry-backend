@@ -27,7 +27,8 @@ const TokenCheckMiddleware = require('./helpers/middleware.js');
 var app = express();
 
 // connect to mongodb
-const uri = `mongodb://${process.env.MONGODB_URI}/${process.env.DATA_BASE_URI}`
+// const uri = `mongodb://${process.env.MONGODB_URI}/${process.env.DATA_BASE_URI}`;
+const uri = `mongodb://${process.env.USER_NAME}:${process.env.PASSWORD}@databases-demo-shard-00-00-46pba.gcp.mongodb.net:27017,databases-demo-shard-00-01-46pba.gcp.mongodb.net:27017,databases-demo-shard-00-02-46pba.gcp.mongodb.net:27017/${process.env.DATA_BASE_URI}?ssl=true&replicaSet=databases-demo-shard-0&authSource=admin&retryWrites=true&w=majority`
 mongoose.connect(uri,{
   useUnifiedTopology: true,
   useNewUrlParser: true,
