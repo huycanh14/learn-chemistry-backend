@@ -43,7 +43,8 @@ const TokenCheckMiddleware = async (req, res, next) => {
                 message: [req.originalUrl, // '/admin/new?a=b' (WARNING: beware query string)
                     req.baseUrl, // '/admin'
                     req.path, // '/new'
-                    req.baseUrl + req.path, ]
+                    req.baseUrl + req.path, 
+                    process.env.api + process.env.account + process.env.logopt_endpoint]
             });
         }
     }
