@@ -1,4 +1,5 @@
-
+var express = require('express');
+var jwt = require('jsonwebtoken');
 var config = require('./config.js');
 var utils = require('./utils.js');
 
@@ -10,16 +11,11 @@ const LINK_NEXT = [
 
 const TokenCheckMiddleware = async (req, res, next) => {
     //Lấy thông tin mã access_token được đính kèm trong request
-    // console.dir(req.originalUrl) // '/admin/new?a=b' (WARNING: beware query string)
-    // console.dir(req.baseUrl) // '/admin'
-    // console.dir(req.path) // '/new'
-    // console.dir(req.baseUrl + req.path)
-    // next();
     
     const access_token = req.headers.access_token || req.query.access_token || req.headers['x-access-token'];
     //kiểm tra có phải đang ở trang router và ở method POST ko -> ko cho kiểm tra token
-
-    if((LINK_NEXT.includes(req.originalUrl.replace("//", "/"))) && req.method === 'POST'){
+    
+    if((LINK_NEXT.includes(req.path.replace("//", "/"))) && req.method === 'POST'){
         next(); 
     } else {
         //decode token
@@ -40,15 +36,10 @@ const TokenCheckMiddleware = async (req, res, next) => {
         } else {
             // không tìm thấy access_token trong request
             return res.status(403).send({
-                message: [req.originalUrl.replace("//", "/"), // '/admin/new?a=b' (WARNING: beware query string)
-                    req.baseUrl, // '/admin'
-                    req.path, // '/new'
-                    req.baseUrl + req.path, 
-                    process.env.api + process.env.account + process.env.logopt_endpoint]
+                message: "No token provided",
             });
         }
     }
-    
 }
 
 module.exports = TokenCheckMiddleware;
