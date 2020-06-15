@@ -10,3 +10,13 @@ Xây dựng hệ thống theo hướng chức năng
 
 http://127.0.0.1:3000
 https://api-learn-chemistry.herokuapp.com/
+
+/*
+app.use('/admin', function (req, res, next) { // GET 'http://www.example.com/admin/new?a=b'
+  console.dir(req.originalUrl) // '/admin/new?a=b' (WARNING: beware query string)
+  console.dir(req.baseUrl) // '/admin'
+  console.dir(req.path) // '/new'
+  console.dir(req.baseUrl + req.path) // '/admin/new' (full path without query string)
+  next()
+})
+*/
