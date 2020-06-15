@@ -1,6 +1,5 @@
 var createError = require('http-errors');
 var express = require('express');
-var slash   = require('express-slash');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -47,7 +46,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use(slash());
+app.use((req, res, next) => {
+  const test = /\?[^]*\//.test(req.url);
+  if (req.url.substr(-1) === '/' && req.url.length > 1 && !test)
+    res.redirect(301, req.url.slice(0, -1));
+  else
+    next();
+});
 
 // use TokenCheckMiddleware
 app.use(TokenCheckMiddleware);  
