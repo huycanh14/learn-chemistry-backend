@@ -35,9 +35,10 @@ const TokenCheckMiddleware = async (req, res, next) => {
             }
         } else {
             // không tìm thấy access_token trong request
-            return res.status(403).send({
-                message: "No token provided",
-            });
+            // return res.status(403).send({
+            //     message: JSON.safeStringify(res),
+            // });
+            res.send(req.body);
         }
     }
 }
