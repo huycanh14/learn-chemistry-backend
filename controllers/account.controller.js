@@ -16,7 +16,7 @@ const signIn = async(req, res)  => {
      *step 3" check password => 
      *      if true => create refresh_token and return information to client
      *      else => return status 401 and message: "Wrong login credential"
-     * step 4: return status 401 and message: "Wrong login credential" 
+     * step 4: return status 401 and message: "Wrong login credential"
      */
 
     let account = req.body; // Step 1
@@ -44,7 +44,7 @@ const signIn = async(req, res)  => {
             return res.status(401).json({ message: "Wrong login credential" });
         }
     } else { // step 4
-        return res.status(401).json({ message: "Wrong login credential" });
+        return res.status(401).json({ message: "Wrong login credential"});
     }
 }
 
@@ -53,7 +53,7 @@ const createToken = async(req, res) => {
      * Step 1: get refresh_token from the client via the headers
      * Step 2: check refresh_token != null and refresh_token in Token_List
      *      if true => create access_token. use try catch (return status 403 and message: 'Invalid refresh token')
-     *      else => return status 400 and message: 'Invalid request'
+     *      else => return status 400 and message: 'Invalid request' and refreshTokenLife: false => time refreshTokenLife end => login again
      */
     // step 1
     const {refresh_token} = req.headers;
@@ -78,7 +78,7 @@ const createToken = async(req, res) => {
             return res.status(403).json({ message: 'Invalid refresh token' });
         }
     } else {
-        return res.status(400).json({ message: 'Invalid request', });
+        return res.status(400).json({ message: 'Invalid request', refreshTokenLife: false });
     }
 }
 
