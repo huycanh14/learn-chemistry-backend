@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors'); // Cross-Origin Resource Sharing
 // declare mongoose
 var mongoose = require('mongoose');
 
@@ -39,6 +40,8 @@ mongoose.connect(uri,{
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+//add cros
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
