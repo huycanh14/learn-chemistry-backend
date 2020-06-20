@@ -37,12 +37,12 @@ const selectTheories = async(req, res) => {
     /**
      * if req.query.page
      * >>> const limit = 10, offset = 0 => offset = (req.query.page - 1) * 10
-     * >>> get key_word = req.body.key_work => select content by key_work
+     * >>> get key_word = req.query.key_work => select content by key_work
      * >>> get activated
-     * >> get lesson_id by req.body.lesson_id
+     * >> get lesson_id by req.query.lesson_id
      * >>> find 
      * else if req.query.get_count == 1
-     * >>> if req.body.lesson_id => get total count by lesson id
+     * >>> if req.query.lesson_id => get total count by lesson id
      * >>> else => get total count
      * else return status(400) and message: 'Not query!'
     */
@@ -55,7 +55,7 @@ const selectTheories = async(req, res) => {
             let key_word = "";
             offset = (req.query.page - 1) * 10;
 
-            if (req.body.key_word) key_word = req.body.key_word;
+            if (req.query.key_word) key_word = req.query.key_word;
             query = [
                 {
                     $or: [
@@ -63,8 +63,8 @@ const selectTheories = async(req, res) => {
                     ]
                 }
             ];
-            if (req.body.activated) query.push({'activated': req.body.activated});
-            if (req.body.lesson_id) query.push({'relationships.lesson_id': req.body.lesson_id});
+            if (req.query.activated) query.push({'activated': req.query.activated});
+            if (req.query.lesson_id) query.push({'relationships.lesson_id': req.query.lesson_id});
 
             await Theory.find({
                 $and: query
@@ -74,8 +74,8 @@ const selectTheories = async(req, res) => {
             });
 
         } else if(req.query.get_count == 1 ){
-            if(req.body.lesson_id){
-                await Theory.countDocuments({'relationships.lesson_id': req.body.lesson_id}, (err, response) => {
+            if(req.query.lesson_id){
+                await Theory.countDocuments({'relationships.lesson_id': req.query.lesson_id}, (err, response) => {
                     if (err) {
                         return res.status(400).json({'message': err});
                     } else {

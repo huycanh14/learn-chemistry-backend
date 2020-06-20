@@ -20,3 +20,8 @@ app.use('/admin', function (req, res, next) { // GET 'http://www.example.com/adm
   next()
 })
 */
+/*
+user?name=tom&age=55 - req.query would yield {name:"tom", age: "55"}
+
+req.params will return parameters in the matched route. If your route is /user/:id and you make a request to /user/5 - req.params would yield {id: "5"}
+*/

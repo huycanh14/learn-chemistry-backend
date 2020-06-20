@@ -9,7 +9,7 @@ var getCountInRelationships = async(req, res) => {
      */  
 
     try {
-        var id = req.body.grade_id;
+        var id = req.query.grade_id;
         var data = [];
         const listRelationships = RELATIONSHIPS_IN_GRADE.map(item => {
             return new Promise((resolve, reject) => item.countDocuments({'relationships.grade_id': id}, (err, response) => {
@@ -61,11 +61,11 @@ const selectGrades = async(req, res)  => {
     /**
      * if req.query.page
      * >>> const limit = 10, offset = 0 => offset = (req.query.page - 1) * 10
-     * >>> get name = req.body.name => select name by key_work
+     * >>> get name = req.query.name => select name by key_work
      * >>> get activated
      * >>> find 
      * else if req.query.get_count == 1 => get total count
-     * els if req.query.relationships == 1 and grade_id = req.body.grade_id => get Count In Relationships
+     * els if req.query.relationships == 1 and grade_id = req.query.grade_id => get Count In Relationships
      * else return status(400) and message: 'Not query!'
      */
     try {
@@ -75,7 +75,7 @@ const selectGrades = async(req, res)  => {
             let query = [];
             offset = (req.query.page - 1) * 10;
             let name = "";
-            if (req.body.name) name = req.body.name;
+            if (req.query.name) name = req.query.name;
             query = [
                 {
                     $or: [
@@ -84,7 +84,7 @@ const selectGrades = async(req, res)  => {
                 }
             ];
             
-            if (req.body.activated) query.push({'activated': req.body.activated});
+            if (req.query.activated) query.push({'activated': req.query.activated});
             await Grade.find({
                 $and: query
             }, null, {limit: limit, skip: offset}, (err, response) => {
@@ -100,7 +100,7 @@ const selectGrades = async(req, res)  => {
                 }
             });
         // } else return req.status(400).json({'message': 'Not query!'});
-        } else if (req.query.relationships == 1 && req.body.grade_id){
+        } else if (req.query.relationships == 1 && req.query.grade_id){
             getCountInRelationships(req, res);
         } else return req.status(400).json({'message': 'Not query!'});
     } catch (err) {

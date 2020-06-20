@@ -9,7 +9,7 @@ var getCountInRelationships = async(req, res) => {
      */  
 
     try {
-        var id = req.body.lesson_id;
+        var id = req.query.lesson_id;
         var data = [];
         const listRelationships = RELATIONSHIPS_IN_LESSON.map(item => {
             return new Promise((resolve, reject) => item.countDocuments({'relationships.lesson_id': id}, (err, response) => {
@@ -68,14 +68,14 @@ const selectLessons = async(req, res)  => {
     /**
      * if req.query.page
      * >>> const limit = 10, offset = 0 => offset = (req.query.page - 1) * 10
-     * >>> get key_word = req.body.key_work => select title, description by key_work
+     * >>> get key_word = req.query.key_work => select title, description by key_work
      * >>> get activated
-     * >> get chapter_id by req.body.chapter_id
+     * >> get chapter_id by req.query.chapter_id
      * >>> find 
      * else if req.query.get_count == 1
-     * >>> if req.body.chapter_id => get total count by chapter id
+     * >>> if req.query.chapter_id => get total count by chapter id
      * >>> else => get total count
-     * else if req.query.relationships == 1 and req.body.lesson_id => get count in relationships
+     * else if req.query.relationships == 1 and req.query.lesson_id => get count in relationships
      * else return status(400) and message: 'Not query!'
      */
     try {
@@ -88,7 +88,7 @@ const selectLessons = async(req, res)  => {
 
             offset = (req.query.page - 1) * 10;
 
-            if (req.body.key_word) key_word = req.body.key_word;
+            if (req.query.key_word) key_word = req.query.key_word;
             query = [
                 {
                     $or: [
@@ -97,8 +97,8 @@ const selectLessons = async(req, res)  => {
                     ]
                 }
             ];
-            if (req.body.activated) query.push({'activated': req.body.activated});
-            if (req.body.chapter_id) query.push({'relationships.chapter_id': req.body.chapter_id});
+            if (req.query.activated) query.push({'activated': req.query.activated});
+            if (req.query.chapter_id) query.push({'relationships.chapter_id': req.query.chapter_id});
 
             await Lesson.find({
                 $and: query
@@ -108,8 +108,8 @@ const selectLessons = async(req, res)  => {
             });
 
         } else if(req.query.get_count == 1 ){
-            if(req.body.chapter_id){
-                await Lesson.countDocuments({'relationships.chapter_id': req.body.chapter_id}, (err, response) => {
+            if(req.query.chapter_id){
+                await Lesson.countDocuments({'relationships.chapter_id': req.query.chapter_id}, (err, response) => {
                     if (err) {
                         return res.status(400).json({'message': err});
                     } else {
@@ -126,7 +126,7 @@ const selectLessons = async(req, res)  => {
                 });
             }
 
-        } else if (req.query.relationships == 1 && req.body.lesson_id) {
+        } else if (req.query.relationships == 1 && req.query.lesson_id) {
             getCountInRelationships(req, res);
 
         } else return req.status(400).json({'message': 'Not query!'});

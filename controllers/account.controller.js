@@ -127,7 +127,7 @@ const selectAccounts = async(req, res)  => {
     /**
      * if req.query.page
      * >>> const limit = 10, offset = 0 => offset = (req.query.page - 1) * 10
-     * >>> get key_work = req.body.keyword => select first_name, last_name, username by key_work
+     * >>> get key_work = req.query.keyword => select first_name, last_name, username by key_work
      * >>> get gender
      * >>> get activated
      * >>> get role_id
@@ -143,7 +143,7 @@ const selectAccounts = async(req, res)  => {
         if (req.query.page) {
             offset = (req.query.page - 1) * 10;
             let keyword = "";
-            if (req.body.keyword) keyword = req.body.keyword;
+            if (req.query.keyword) keyword = req.query.keyword;
             query = [
                 {
                     $or: [
@@ -154,9 +154,9 @@ const selectAccounts = async(req, res)  => {
                 }
             ];
             
-            if (req.body.gender) query.push({'gender': req.body.gender});
-            if (req.body.activated) query.push({'activated': req.body.activated});
-            if (req.body.role_id) query.push({'role_id': req.body.role_id});
+            if (req.query.gender) query.push({'gender': req.query.gender});
+            if (req.query.activated) query.push({'activated': req.query.activated});
+            if (req.query.role_id) query.push({'role_id': req.query.role_id});
             
             await Account.find({
                 $and: query

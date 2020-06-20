@@ -8,7 +8,7 @@ var getCountInRelationships = async(req, res) => {
      */  
 
     try {
-        var id = req.body.chapter_id;
+        var id = req.query.chapter_id;
         var data = [];
         const listRelationships = RELATIONSHIPS_IN_QUESTION.map(item => {
             return new Promise((resolve, reject) => item.countDocuments({'relationships.question_id': id}, (err, response) => {
@@ -86,14 +86,14 @@ const selectQuestions = async(req, res) => {
     /**
      * if req.query.page
      * >>> const limit = 10, offset = 0 => offset = (req.query.page - 1) * 10
-     * >>> get key_word = req.body.key_work => select content by key_work
+     * >>> get key_word = req.query.key_work => select content by key_work
      * >>> get activated
-     * >>> get chapter_id by req.body.chapter_id
-     * >>> get lesson_id by req.body.lesson_id
-     * >>> get example_id by req.body.example_id //example_id is type_of_lesson id
+     * >>> get chapter_id by req.query.chapter_id
+     * >>> get lesson_id by req.query.lesson_id
+     * >>> get example_id by req.query.example_id //example_id is type_of_lesson id
      * >>>> find 
      * else if req.query.get_count == 1 => get total count
-     * else if req.query.relationships == 1 and req.body.question_id => get count in relationships
+     * else if req.query.relationships == 1 and req.query.question_id => get count in relationships
      * else return status(400) and message: 'Not query!'
      */
     try {
@@ -103,7 +103,7 @@ const selectQuestions = async(req, res) => {
             let query = [];
             offset = (req.query.page - 1) * 10;
             let key_word = "";
-            if (req.body.key_word) key_word = req.body.key_word;
+            if (req.query.key_word) key_word = req.query.key_word;
             query = [
                 {
                     $or: [
@@ -111,10 +111,10 @@ const selectQuestions = async(req, res) => {
                     ]
                 }
             ];
-            if (req.body.activated) query.push({'activated': req.body.activated});
-            if (req.body.chapter_id) query.push({'relationships.chapter_id': req.body.chapter_id});
-            if (req.body.lesson_id) query.push({'relationships.lesson_id': req.body.lesson_id});
-            if (req.body.example_id) query.push({'relationships.example_id': req.body.example_id});
+            if (req.query.activated) query.push({'activated': req.query.activated});
+            if (req.query.chapter_id) query.push({'relationships.chapter_id': req.query.chapter_id});
+            if (req.query.lesson_id) query.push({'relationships.lesson_id': req.query.lesson_id});
+            if (req.query.example_id) query.push({'relationships.example_id': req.query.example_id});
             await Question.find({
                 $and: query
             }, null, {limit: limit, skip: offset}, (err, response) => {

@@ -9,7 +9,7 @@ var getCountInRelationships = async(req, res) => {
      */  
 
     try {
-        var id = req.body.chapter_id;
+        var id = req.DIENND .chapter_id;
         var data = [];
         const listRelationships = RELATIONSHIPS_IN_CHAPTER.map(item => {
             return new Promise((resolve, reject) => item.countDocuments({'relationships.chapter_id': id}, (err, response) => {
@@ -66,12 +66,12 @@ const selectChapters = async(req, res)  => {
     /**
      * if req.query.page
      * >>> const limit = 10, offset = 0 => offset = (req.query.page - 1) * 10
-     * >>> get key_word = req.body.key_work => select title, description by key_work
+     * >>> get key_word = req.query.key_work => select title, description by key_work
      * >>> get activated
-     * >> get grade_id by req.body.grade_id
+     * >> get grade_id by req.query.grade_id
      * >>> find 
      * else if req.query.get_count == 1 => get total count
-     * else if req.query.relationships == 1 and req.body.chapter_id => get count in relationships
+     * else if req.query.relationships == 1 and req.query.chapter_id => get count in relationships
      * else return status(400) and message: 'Not query!'
      */
     try {
@@ -81,7 +81,7 @@ const selectChapters = async(req, res)  => {
         if(req.query.page){
             offset = (req.query.page - 1) * 10;
             let key_word = "";
-            if (req.body.key_word) key_word = req.body.key_word;
+            if (req.query.key_word) key_word = req.query.key_word;
             query = [
                 {
                     $or: [
@@ -90,8 +90,8 @@ const selectChapters = async(req, res)  => {
                     ]
                 }
             ];
-            if (req.body.activated) query.push({'activated': req.body.activated});
-            if (req.body.grade_id) query.push({relationships: {grade_id: req.body.grade_id}})
+            if (req.query.activated) query.push({'activated': req.query.activated});
+            if (req.query.grade_id) query.push({relationships: {grade_id: req.query.grade_id}})
             await Chapter.find({
                 $and: query
             }, null, {limit: limit, skip: offset}, (err, response) => {
@@ -106,7 +106,7 @@ const selectChapters = async(req, res)  => {
                     return res.status(200).json({'count': response});
                 }
             });
-        } else if (req.query.relationships == 1 && req.body.chapter_id){
+        } else if (req.query.relationships == 1 && req.query.chapter_id){
             getCountInRelationships(req, res);
         } else return req.status(400).json({'message': 'Not query!'});
     } catch(err) {

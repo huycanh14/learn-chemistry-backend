@@ -37,7 +37,7 @@ const createAnswer = async(req, res)  => {
 
 const selectAnswers = async(req, res) => {
     /**
-     * if req.body.question_id
+     * if req.query.question_id
      * >>> get activated
      * >>> find answers by question_id
      * else if req.query.get_count == 1 => get total count
@@ -47,7 +47,7 @@ const selectAnswers = async(req, res) => {
         if(req.query.question_id){
             let query = [];
             query.push({'relationships.question_id': req.query.question_id});
-            if (req.body.activated) query.push({'activated': req.body.activated});
+            if (req.query.activated) query.push({'activated': req.query.activated});
             await Answer.find({
                 $and: query
             }, null, {}, (err, response) => {
