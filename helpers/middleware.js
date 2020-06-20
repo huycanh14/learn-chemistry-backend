@@ -14,7 +14,6 @@ const TokenCheckMiddleware = async (req, res, next) => {
     
     const access_token = req.headers.access_token || req.query.access_token || req.headers['x-access-token'];
     //kiểm tra có phải đang ở trang router và ở method POST ko -> ko cho kiểm tra token
-    
     if((LINK_NEXT.includes(req.path)) && req.method === 'POST'){
         next(); 
     } else {
@@ -30,7 +29,8 @@ const TokenCheckMiddleware = async (req, res, next) => {
                 //Giải mã gặp lỗi: Không đúng, hết hạn....
                 // console.error(err)
                 return res.status(401).json({
-                    message: "Unauthorized access."
+                    message: "Unauthorized access.",
+                    accessTokenLife: false
                 });
             }
         } else {
