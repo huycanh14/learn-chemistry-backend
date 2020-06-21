@@ -31,7 +31,7 @@ const signIn = async(req, res)  => {
         let check_password = bcrypt.compareSync(account.password, data.password);
         if(check_password) {
             let refresh_token = jwt.sign({data: data}, config.refreshTokenSecret, {
-                expiresIn: config.tokenLife
+                expiresIn: config.refreshTokenLife
             });
             Token_List[refresh_token] = data;
             let response = data;
