@@ -25,3 +25,13 @@ user?name=tom&age=55 - req.query would yield {name:"tom", age: "55"}
 
 req.params will return parameters in the matched route. If your route is /user/:id and you make a request to /user/5 - req.params would yield {id: "5"}
 */
+
+/*
+await Grade.find({$and: query}).countDocuments((err, response) => {
+    if (err) {
+        return res.status(400).json({'message': err});
+    } else {
+        return res.status(200).json({'count': response});
+    }
+});
+*/

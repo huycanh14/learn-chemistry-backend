@@ -69,30 +69,39 @@ const selectGrades = async(req, res)  => {
      * else return status(400) and message: 'Not query!'
      */
     try {
+        
+        let query = [];
+        let name = "";
+        if (req.query.name) name = req.query.name;
+        query = [
+            {
+                $or: [
+                    {'name': {$regex: name, $options: 'is'}},
+                ]
+            }
+        ];
+        
+        if (req.query.activated) query.push({'activated': req.query.activated});
+
         if(req.query.page){
             let limit = 10;
             let offset = 10;
-            let query = [];
             offset = (req.query.page - 1) * 10;
-            let name = "";
-            if (req.query.name) name = req.query.name;
-            query = [
-                {
-                    $or: [
-                        {'name': {$regex: name, $options: 'is'}},
-                    ]
-                }
-            ];
-            
-            if (req.query.activated) query.push({'activated': req.query.activated});
+            let sort = {
+                created_at: 1
+            };
+            if(req.query.sort_created_at === 'asc') sort = {created_at: 1};
+            else if(req.query.sort_created_at === 'desc') sort = {created_at: -1};
+            else if(req.query.sort_name === 'asc') sort = {name: 1};
+            else if(req.query.sort_name === 'desc') sort = {name: -1};
             await Grade.find({
                 $and: query
-            }, null, {limit: limit, skip: offset}, (err, response) => {
+            }, null, {limit: limit, skip: offset, sort: sort}, (err, response) => {
                 if (err) res.status(400).json({'message': err});
                 else res.status(200).json({'data': response});
             });
         } else if (req.query.get_count == 1) {
-            await Grade.countDocuments({}, (err, response) => {
+            await Grade.countDocuments({$and: query}, (err, response) => {
                 if (err) {
                     return res.status(400).json({'message': err});
                 } else {
