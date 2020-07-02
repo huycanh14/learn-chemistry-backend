@@ -44,10 +44,11 @@ const selectAnswers = async(req, res) => {
      * else return status(400) and message: 'Not query!'
      */
     try {
+        let query = [];
+        query.push({'relationships.question_id': req.query.question_id});
+        if (req.query.activated) query.push({'activated': req.query.activated});
         if(req.query.question_id){
-            let query = [];
-            query.push({'relationships.question_id': req.query.question_id});
-            if (req.query.activated) query.push({'activated': req.query.activated});
+            
             await Answer.find({
                 $and: query
             }, null, {}, (err, response) => {
@@ -55,7 +56,7 @@ const selectAnswers = async(req, res) => {
                 else res.status(200).json({'data': response});
             });
         } else if (req.query.get_count == 1) {
-            await Answer.countDocuments({}, (err, response) => {
+            await Answer.countDocuments({$and: query}, (err, response) => {
                 if (err) {
                     return res.status(400).json({'message': err});
                 } else {

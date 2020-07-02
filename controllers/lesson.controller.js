@@ -79,52 +79,53 @@ const selectLessons = async(req, res)  => {
      * else return status(400) and message: 'Not query!'
      */
     try {
+        let query = [];
+        let key_word = "";
+
+        offset = (req.query.page - 1) * 10;
+
+        if (req.query.key_word) key_word = req.query.key_word;
+        query = [
+            {
+                $or: [
+                    {'': {$regex: key_word, $options: 'is'}},
+                    {'description': {$regex: key_word, $options: 'is'}},
+                ]
+            }
+        ];title
+        if (req.query.activated) query.push({'activated': req.query.activated});
+        if (req.query.chapter_id) query.push({'relationships.chapter_id': req.query.chapter_id});
+
         if(req.query.page) {
 
             let limit = 10;
             let offset = 10;
-            let query = [];
-            let key_word = "";
-
-            offset = (req.query.page - 1) * 10;
-
-            if (req.query.key_word) key_word = req.query.key_word;
-            query = [
-                {
-                    $or: [
-                        {'title': {$regex: key_word, $options: 'is'}},
-                        {'description': {$regex: key_word, $options: 'is'}},
-                    ]
-                }
-            ];
-            if (req.query.activated) query.push({'activated': req.query.activated});
-            if (req.query.chapter_id) query.push({'relationships.chapter_id': req.query.chapter_id});
+        
+            let sort = {
+                created_at: 1
+            };
+            if(req.query.sort_created_at === 'asc') sort = {created_at: 1};
+            else if(req.query.sort_created_at === 'desc') sort = {created_at: -1};
+            else if(req.query.sort_title === 'asc') sort = {title: 1};
+            else if(req.query.sort_title === 'desc') sort = {title: -1};
+            else if(req.query.sort_description === 'asc') sort = {description: 1};
+            else if(req.query.sort_description === 'desc') sort = {description: -1};
 
             await Lesson.find({
                 $and: query
-            }, null, {limit: limit, skip: offset}, (err, response) => {
+            }, null, {limit: limit, skip: offset, sort: sort}, (err, response) => {
                 if (err) res.status(400).json({'message': err});
                 else res.status(200).json({'data': response});
             });
 
         } else if(req.query.get_count == 1 ){
-            if(req.query.chapter_id){
-                await Lesson.countDocuments({'relationships.chapter_id': req.query.chapter_id}, (err, response) => {
-                    if (err) {
-                        return res.status(400).json({'message': err});
-                    } else {
-                        return res.status(200).json({'count': response});
-                    }
-                });
-            } else {    
-                await Lesson.countDocuments({}, (err, response) => {
-                    if (err) {
-                        return res.status(400).json({'message': err});
-                    } else {
-                        return res.status(200).json({'count': response});
-                    }
-                });
-            }
+            await Lesson.countDocuments({$and: query}, (err, response) => {
+                if (err) {
+                    return res.status(400).json({'message': err});
+                } else {
+                    return res.status(200).json({'count': response});
+                }
+            });
 
         } else if (req.query.relationships == 1 && req.query.lesson_id) {
             getCountInRelationships(req, res);

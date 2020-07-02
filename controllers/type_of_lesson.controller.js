@@ -79,47 +79,50 @@ const selectTypeOfLessons = async(req, res) => {
      * else return status(400) and message: 'Not query!'
     */
     try {
-        let limit = 10;
-        let offset = 10;
         let query = [];
+        let key_word = "";
+        if (req.query.key_word) key_word = req.query.key_word;
+        query = [
+            {
+                $or: [
+                    {'title': {$regex: key_word, $options: 'is'}},
+                    {'content': {$regex: key_word, $options: 'is'}},
+                ]
+            }
+        ];
+        if (req.query.activated) query.push({'activated': req.query.activated});
+        if (req.query.lesson_id) query.push({'relationships.lesson_id': req.query.lesson_id});
+
         if(req.query.page){
+            let limit = 10;
+            let offset = 10;
             offset = (req.query.page - 1) * 10;
-            let key_word = "";
-            if (req.query.key_word) key_word = req.query.key_word;
-            query = [
-                {
-                    $or: [
-                        {'title': {$regex: key_word, $options: 'is'}},
-                        {'content': {$regex: key_word, $options: 'is'}},
-                    ]
-                }
-            ];
-            if (req.query.activated) query.push({'activated': req.query.activated});
-            if (req.query.lesson_id) query.push({'relationships.lesson_id': req.query.lesson_id})
+
+            let sort = {
+                created_at: 1
+            };
+            if(req.query.sort_created_at === 'asc') sort = {created_at: 1};
+            else if(req.query.sort_created_at === 'desc') sort = {created_at: -1};
+            else if(req.query.sort_title === 'asc') sort = {title: 1};
+            else if(req.query.sort_title === 'desc') sort = {title: -1};
+            else if(req.query.sort_content === 'asc') sort = {content: 1};
+            else if(req.query.sort_content === 'desc') sort = {content: -1};
+            
             await TypeOfLesson.find({
                 $and: query
-            }, null, {limit: limit, skip: offset}, (err, response) => {
+            }, null, {limit: limit, skip: offset, sort: sort}, (err, response) => {
                 if (err) res.status(400).json({'message': err});
                 else res.status(200).json({'data': response});
             });
         } else if (req.query.get_count == 1) {
-            if(req.query.lesson_id){
-                await TypeOfLesson.countDocuments({'relationships.lesson_id': req.query.lesson_id}, (err, response) => {
-                    if (err) {
-                        return res.status(400).json({'message': err});
-                    } else {
-                        return res.status(200).json({'count': response});
-                    }
-                });
-            } else {
-                await TypeOfLesson.countDocuments({}, (err, response) => {
-                    if (err) {
-                        return res.status(400).json({'message': err});
-                    } else {
-                        return res.status(200).json({'count': response});
-                    }
-                });
-            }
+            await TypeOfLesson.countDocuments({$and: query}, (err, response) => {
+                if (err) {
+                    return res.status(400).json({'message': err});
+                } else {
+                    return res.status(200).json({'count': response});
+                }
+            });
+            
         } else if (req.query.relationships == 1 && req.query.type_of_lesson_id){
             getCountInRelationships(req, res);
         } else return req.status(400).json({'message': 'Not query!'});
