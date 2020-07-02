@@ -137,36 +137,50 @@ const selectAccounts = async(req, res)  => {
      */
 
     try {
-        let limit = 10;
-        let offset = 0;
+        
         let query = [];
+        let keyword = "";
+        if (req.query.keyword) keyword = req.query.keyword;
+        query = [
+            {
+                $or: [
+                    {'first_name': {$regex: keyword, $options: 'is'}},
+                    {'last_name': {$regex: keyword, $options: 'is'}},
+                    {'username': {$regex: keyword, $options: 'is'}},
+                ]
+            }
+        ];
+        
+        if (req.query.gender) query.push({'gender': req.query.gender});
+        if (req.query.activated) query.push({'activated': req.query.activated});
+        if (req.query.role_id) query.push({'role_id': req.query.role_id});
         if (req.query.page) {
+
+            let limit = 10;
+            let offset = 0;
             offset = (req.query.page - 1) * 10;
-            let keyword = "";
-            if (req.query.keyword) keyword = req.query.keyword;
-            query = [
-                {
-                    $or: [
-                        {'first_name': {$regex: keyword, $options: 'is'}},
-                        {'last_name': {$regex: keyword, $options: 'is'}},
-                        {'username': {$regex: keyword, $options: 'is'}},
-                    ]
-                }
-            ];
-            
-            if (req.query.gender) query.push({'gender': req.query.gender});
-            if (req.query.activated) query.push({'activated': req.query.activated});
-            if (req.query.role_id) query.push({'role_id': req.query.role_id});
+
+            let sort = {
+                created_at: 1
+            };
+            if(req.query.sort_created_at === 'asc') sort = {created_at: 1};
+            else if(req.query.sort_created_at === 'desc') sort = {created_at: -1};
+            else if(req.query.sort_first_name === 'asc') sort = {first_name: 1};
+            else if(req.query.sort_first_name === 'desc') sort = {first_name: -1};
+            else if(req.query.sort_last_name === 'asc') sort = {last_name: 1};
+            else if(req.query.sort_last_name === 'desc') sort = {last_name: -1};
+            else if(req.query.sort_username === 'asc') sort = {username: 1};
+            else if(req.query.sort_username === 'desc') sort = {username: -1};
             
             await Account.find({
                 $and: query
-            }, '-password', {limit: limit, skip: offset}, (err, response) => {
+            }, '-password', {limit: limit, skip: offset, sort: sort}, (err, response) => {
                 if (err) res.status(400).json({'message': err});
                 else res.status(200).json({'data': response});
             });
             
         } else if (req.query.get_count == 1) {
-            await Account.count({}, (err, response) => {
+            await Account.count({$and: query}, (err, response) => {
                 if (err) {
                     return res.status(400).json({'message': err});
                 } else {
