@@ -66,6 +66,7 @@ const selectGrades = async(req, res)  => {
      * >>> find 
      * else if req.query.get_count == 1 => get total count
      * els if req.query.relationships == 1 and grade_id = req.query.grade_id => get Count In Relationships
+     * else if req.query.get_all == 1 => get all grades and sort by name
      * else return status(400) and message: 'Not query!'
      */
     try {
@@ -111,6 +112,14 @@ const selectGrades = async(req, res)  => {
         // } else return req.status(400).json({'message': 'Not query!'});
         } else if (req.query.relationships == 1 && req.query.grade_id){
             getCountInRelationships(req, res);
+        }else if(req.query.get_all == 1){
+            let sort = {
+                name: 1
+            };
+            await Grade.find({}, null, {sort: sort}, (err, response) => {
+                if (err) res.status(400).json({'message': err});
+                else res.status(200).json({'data': response});
+            });
         } else return req.status(400).json({'message': 'Not query!'});
     } catch (err) {
         return res.status(400).json({ message: 'Bad request!', error: err.message});

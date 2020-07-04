@@ -9,7 +9,7 @@ var getCountInRelationships = async(req, res) => {
      */  
 
     try {
-        var id = req.DIENND .chapter_id;
+        var id = req.query.chapter_id;
         var data = [];
         const listRelationships = RELATIONSHIPS_IN_CHAPTER.map(item => {
             return new Promise((resolve, reject) => item.countDocuments({'relationships.chapter_id': id}, (err, response) => {
@@ -25,6 +25,24 @@ var getCountInRelationships = async(req, res) => {
                 return status(400).json({message: new Error(error)})
             });
         return res.status(200).json({data: data});
+    } catch(err){
+        return res.status(400).json({ message: 'Bad request!', error: err.message });
+    }
+};
+
+var getAllChapters = async(req, res) => {
+    try {
+        let query = [{}];
+        if (req.query.grade_id) query.push( {"relationships.grade_id": req.query.grade_id} );
+        let sort = {
+            chapter_number: 1
+        };
+        await Chapter.find({
+            $and: query
+        }, null, {sort: sort}, (err, response) => {
+            if (err) res.status(400).json({'message': err});
+            else res.status(200).json({'data': response});
+        });
     } catch(err){
         return res.status(400).json({ message: 'Bad request!', error: err.message });
     }
@@ -72,6 +90,9 @@ const selectChapters = async(req, res)  => {
      * >>> find 
      * else if req.query.get_count == 1 => get total count
      * else if req.query.relationships == 1 and req.query.chapter_id => get count in relationships
+     * else if req.query.get_all == 1
+     * >>> if req.query.grade_id => get all chapters by grade_id and sort by chapter_number
+     * >>> else get all chapters and sort by chapter_number
      * else return status(400) and message: 'Not query!'
      */
     try {
@@ -107,7 +128,7 @@ const selectChapters = async(req, res)  => {
 
             await Chapter.find({
                 $and: query
-            }, null, {limit: limit, skip: offset}, (err, response) => {
+            }, null, {limit: limit, skip: offset, sort: sort}, (err, response) => {
                 if (err) res.status(400).json({'message': err});
                 else res.status(200).json({'data': response});
             });
@@ -121,6 +142,8 @@ const selectChapters = async(req, res)  => {
             });
         } else if (req.query.relationships == 1 && req.query.chapter_id){
             getCountInRelationships(req, res);
+        } else if(req.query.get_all == 1){
+            getAllChapters(req, res);
         } else return req.status(400).json({'message': 'Not query!'});
     } catch(err) {
         return res.status(400).json({ message: 'Bad request!', error: err.message})

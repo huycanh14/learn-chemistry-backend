@@ -30,6 +30,24 @@ var getCountInRelationships = async(req, res) => {
     }
 };
 
+var getAllLessons = async(req, res) => {
+    try {
+        let query = [{}];
+        if (req.query.chapter_id) query.push( {"relationships.chapter_id": req.query.chapter_id} );
+        let sort = {
+            lesson_number: 1
+        };
+        await Lesson.find({
+            $and: query
+        }, null, {sort: sort}, (err, response) => {
+            if (err) res.status(400).json({'message': err});
+            else res.status(200).json({'data': response});
+        });
+    } catch(err){
+        return res.status(400).json({ message: 'Bad request!', error: err.message });
+    }
+};
+
 const createLesson = async(req, res)  => {
     /**
      *  Step 1: get information of new lesson from the client via the body
@@ -76,23 +94,24 @@ const selectLessons = async(req, res)  => {
      * >>> if req.query.chapter_id => get total count by chapter id
      * >>> else => get total count
      * else if req.query.relationships == 1 and req.query.lesson_id => get count in relationships
+     * else if req.query.get_all == 1
+     * >>> if req.query.chapter_id => get all lessons by chapter_id and sort by lesson_number
+     * >>> else get all lessons and sort by lesson_number
      * else return status(400) and message: 'Not query!'
      */
     try {
         let query = [];
         let key_word = "";
 
-        offset = (req.query.page - 1) * 10;
-
         if (req.query.key_word) key_word = req.query.key_word;
         query = [
             {
                 $or: [
-                    {'': {$regex: key_word, $options: 'is'}},
+                    {'title': {$regex: key_word, $options: 'is'}},
                     {'description': {$regex: key_word, $options: 'is'}},
                 ]
             }
-        ];title
+        ];
         if (req.query.activated) query.push({'activated': req.query.activated});
         if (req.query.chapter_id) query.push({'relationships.chapter_id': req.query.chapter_id});
 
@@ -100,6 +119,7 @@ const selectLessons = async(req, res)  => {
 
             let limit = 10;
             let offset = 10;
+            offset = (req.query.page - 1) * 10;
         
             let sort = {
                 created_at: 1
@@ -129,7 +149,8 @@ const selectLessons = async(req, res)  => {
 
         } else if (req.query.relationships == 1 && req.query.lesson_id) {
             getCountInRelationships(req, res);
-
+        } else if(req.query.get_all == 1){
+            getAllLessons(req, res);
         } else return req.status(400).json({'message': 'Not query!'});
     } catch (err) {
         return res.status(400).json({message: 'Bad request!', error: err.message});
