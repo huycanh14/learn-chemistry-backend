@@ -33,6 +33,24 @@ const createTheory = async(req, res)  => {
 
 };
 
+var getAllTheories = async(req, res) => {
+    try {
+        let query = [{}];
+        if (req.query.lesson_id) query.push( {"relationships.lesson_id": req.query.lesson_id} );
+        let sort = {
+            created_at: 1
+        };
+        await Theories.find({
+            $and: query
+        }, null, {sort: sort}, (err, response) => {
+            if (err) res.status(400).json({'message': err});
+            else res.status(200).json({'data': response});
+        });
+    } catch(err){
+        return res.status(400).json({ message: 'Bad request!', error: err.message });
+    }
+};
+
 const selectTheories = async(req, res) => {
     /**
      * if req.query.page
@@ -44,6 +62,7 @@ const selectTheories = async(req, res) => {
      * else if req.query.get_count == 1
      * >>> if req.query.lesson_id => get total count by lesson id
      * >>> else => get total count
+     * else get all theory and sort by created_at
      * else return status(400) and message: 'Not query!'
     */
     try {
@@ -90,6 +109,8 @@ const selectTheories = async(req, res) => {
                 }
             });
 
+        } else if(req.query.get_all == 1){
+            getAllTheories(req, res);
         } else return req.status(400).json({'message': 'Not query!'});
     } catch (err) {
         return res.status(400).json({message: 'Bad request!', error: err.message})
