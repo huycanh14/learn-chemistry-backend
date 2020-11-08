@@ -1,16 +1,16 @@
 // cung cấp một hàm để xác thực các mã token.
 
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 module.exports = {
-    verifyJwtToken: (token, secretKey) => {
-        return new Promise((resolve, reject) => {
-            jwt.verify(token, secretKey, (err, decoded) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(decoded);
-            });
-        });
-    }
-}
+	verifyJwtToken: (token, secretKey) => {
+		return new Promise((resolve, reject) => {
+			jwt.verify(token, secretKey, (err, decoded) => {
+				if (err) {
+					return reject(err);
+				}
+				resolve(decoded);
+			});
+		});
+	},
+};

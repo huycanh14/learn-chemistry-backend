@@ -40,12 +40,17 @@ var getAllTheories = async(req, res) => {
         let sort = {
             created_at: 1
         };
-        await Theories.find({
-            $and: query
-        }, null, {sort: sort}, (err, response) => {
-            if (err) res.status(400).json({'message': err});
-            else res.status(200).json({'data': response});
-        });
+        await Theory.find(
+					{
+						$and: query,
+					},
+					null,
+					{ sort: sort },
+					(err, response) => {
+						if (err) res.status(400).json({ message: err });
+						else res.status(200).json({ data: response });
+					},
+				);
     } catch(err){
         return res.status(400).json({ message: 'Bad request!', error: err.message });
     }
